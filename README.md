@@ -1,15 +1,15 @@
 # tiy-homework-animal-shelter
 Create a program to manage animals in a shelter.
 
-Animal Shelter - v1.0
+com.forestnewark.Animal Shelter - v1.0
 
 Preface
 
-This assignment is significantly larger and more challenging than anything you will have done so far in class. But, that's ok. You have all of the tools you need to complete it successfully. For example, the MenuService class (described below) can be patterned off the recent Scanner exercise.
+This assignment is significantly larger and more challenging than anything you will have done so far in class. But, that's ok. You have all of the tools you need to complete it successfully. For example, the com.forestnewark.MenuService class (described below) can be patterned off the recent Scanner exercise.
 
 Be sure to read the instructions below carefully. Think about your approach to the problem, draw pictures to visualize the structure of your program, and be methodical. You can do this.
 
-Animal Shelter - v1.0
+com.forestnewark.Animal Shelter - v1.0
 
 Summary: Create a program to manage animals in a shelter.
 
@@ -67,15 +67,15 @@ For this assignment you will need to create a few classes. I give you some guide
 
 You may want to think about using an appropriate package name for your classes. For example, com.theironyard.
 
-Animal Class
+com.forestnewark.Animal Class
 
-You will need to create a class named Animal. Animals have these properties:
+You will need to create a class named com.forestnewark.Animal. Animals have these properties:
 
 Name
 Species
 Breed
 Description
-MenuService class
+com.forestnewark.MenuService class
 
 This program is text-based and users interact with it using menus and textual prompts. You'll see all of these details below, but this is an example of what the main menu will look like:
 
@@ -91,9 +91,9 @@ This program is text-based and users interact with it using menus and textual pr
 Please choose an option:
 When the user enters a value like 3 the program will know that the user wants to view an animal's details and then prompt them for which animal they want to view. If the user selects 2 or 4 the program will provide them with a series of prompts to collect data about the new animal.
 
-Placing all of this logic into the Main class would quickly create a mess of spaghetti code. Instead, you should create a new class named MenuService. This class' responsibility is displaying menus, prompting the user for input, and returning the results. IE, it manages the menus.
+Placing all of this logic into the Main class would quickly create a mess of spaghetti code. Instead, you should create a new class named com.forestnewark.MenuService. This class' responsibility is displaying menus, prompting the user for input, and returning the results. IE, it manages the menus.
 
-For example, your MenuService might have a method named promptForMainMenu() that looks like this:
+For example, your com.forestnewark.MenuService might have a method named promptForMainMenu() that looks like this:
 
 public int promptForMainMenuSelection() {
     System.out.println("\n-- Main Menu --\n" +
@@ -147,28 +147,28 @@ This method prints out a prompt, such as "Please choose an option:". It then use
 I suggest that you create methods for each action that can be performed on the menu. For example:
 
 int = promptForMainMenuSelection() - This might print the main menu, wait for user input, and return an integer indicating the user's choice.
-Animal = promptForAnimalData() - This might prompt the user for each field for an animal and then create and return a new instance of the Animal class using that data.
+com.forestnewark.Animal = promptForAnimalData() - This might prompt the user for each field for an animal and then create and return a new instance of the com.forestnewark.Animal class using that data.
 There are many ways to accomplish this. But, it's generally an indicator you can do better if your methods become longer than ten or twenty lines.
-Somewhere in your application you will need to have an ArrayList of Animal instances. Give careful consideration to where you keep this. It might not make sense to have this in the MenuService. [callout-hint]
+Somewhere in your application you will need to have an ArrayList of com.forestnewark.Animal instances. Give careful consideration to where you keep this. It might not make sense to have this in the com.forestnewark.MenuService. [callout-hint]
 
-[callout-hint] You could write methods that return an Animal or accept one as an argument. For example, why not write one method to collect information for a new animal, promptForNewAnimal(). This might prompt the user for the Animal's name, etc, and then actually construct and return an Animal. Maybe you could do something similar for editing an animal?
+[callout-hint] You could write methods that return an com.forestnewark.Animal or accept one as an argument. For example, why not write one method to collect information for a new animal, promptForNewAnimal(). This might prompt the user for the com.forestnewark.Animal's name, etc, and then actually construct and return an com.forestnewark.Animal. Maybe you could do something similar for editing an animal?
 
 Main class
 
-While console input and output for this application is managed via the MenuService, we still need something to control the application. You will need to create a Main class with a main() method that does this.
+While console input and output for this application is managed via the com.forestnewark.MenuService, we still need something to control the application. You will need to create a Main class with a main() method that does this.
 
 Your main method will have a while(true){} loop in it to keep the application running forever. It will likely have some conditional statements that are executed based on user input. For example:
 
 while(true) {
     int action = menuService.promptForMainMenuSelection();
 
-    if(action == MenuService.CREATE_ANIMAL){
+    if(action == com.forestnewark.MenuService.CREATE_ANIMAL){
         // do something
-    } else if(action == MenuService.LIST_ANIMALS){
+    } else if(action == com.forestnewark.MenuService.LIST_ANIMALS){
         // do something
     }
 }
-Note that I'm using static final properties on the MenuService to hold constants that make reading my code easier. While I could check if action == 1, out of context it's hard to tell what that means. It is easier to read and understand action == MenuService.CREATE_ANIMAL.
+Note that I'm using static final properties on the com.forestnewark.MenuService to hold constants that make reading my code easier. While I could check if action == 1, out of context it's hard to tell what that means. It is easier to read and understand action == com.forestnewark.MenuService.CREATE_ANIMAL.
 
 Program Behavior
 
@@ -177,10 +177,10 @@ The following instructions describe how the program should behave. The menu stru
 The only additional requirements are that the program provides some way to do the following:
 
 Create animals
-Animal instances should be stored in an ArrayList of Animal instances. Hint: you probably don't want to keep this data in the MenuService.
+com.forestnewark.Animal instances should be stored in an ArrayList of com.forestnewark.Animal instances. Hint: you probably don't want to keep this data in the com.forestnewark.MenuService.
 Read animals
 Edit/Update animals
-When editing an animal, don't make users retype everything. See the suggestions below regarding editing an animal. Hint: You could create a method on MenuService that accepts an Animal as an argument and, for each field, if the user doesn't provide a new value, it reuses the current value.
+When editing an animal, don't make users retype everything. See the suggestions below regarding editing an animal. Hint: You could create a method on com.forestnewark.MenuService that accepts an com.forestnewark.Animal as an argument and, for each field, if the user doesn't provide a new value, it reuses the current value.
 Delete animals
 Quit the application
 Main Menu
@@ -207,7 +207,7 @@ Bonus points if you colorize the error messages or other parts of this UI to mak
 
 List Animals
 
-If the user chooses option 1 in the main menu they will see a list of animals. Animals will be printed out with an index that can be used to view that animal (EG: main menu option 3). The list will include the name of the animal and the type of animal (dog, cat, bird, etc). This data will be retrieved from the ArrayList of Animal instances.
+If the user chooses option 1 in the main menu they will see a list of animals. Animals will be printed out with an index that can be used to view that animal (EG: main menu option 3). The list will include the name of the animal and the type of animal (dog, cat, bird, etc). This data will be retrieved from the ArrayList of com.forestnewark.Animal instances.
 
 After the list of animals has been printed out, the main menu will be printed again.
 
@@ -241,7 +241,7 @@ Please choose an option: 1
 6) Quit
 
 Please choose an option: 
-Create an Animal
+Create an com.forestnewark.Animal
 
 If the user chooses option 2 in the main menu they will receive prompts for information about the new animal. The user must provide information for the name, species, and description. The breed field is optional.
 
@@ -262,11 +262,11 @@ For example:
 
 Please choose an option: 2
 
--- Create an Animal --
+-- Create an com.forestnewark.Animal --
 
 Please answer the following questions.
 
-Animal Name: Fred
+com.forestnewark.Animal Name: Fred
 Species: 
 
 Error: The Species field is required. Please try again.
@@ -287,7 +287,7 @@ Success: The animal has been created!
 6) Quit
 
 Please choose an option: 
-View Animal Details
+View com.forestnewark.Animal Details
 
 If the user chooses option 3 in the main menu they will be prompted to enter a number for a specific pet. This number comes from the list of pets (main menu option 1) and the corresponding animal will be retrieved from the ArrayList of Animals.
 
@@ -308,7 +308,7 @@ For example:
 
 Please choose an option: 3
 
--- View an Animal --
+-- View an com.forestnewark.Animal --
 
 What is the numeric ID of the animal you want to view?: Fred
 
@@ -331,7 +331,7 @@ Description: Fat and happy. Very long when stretched out.
 6) Quit
 
 Please choose an option: 
-Edit an Animal
+Edit an com.forestnewark.Animal
 
 If the user chooses option 4 in the main menu they will be prompted to enter a number for a specific pet. This number comes from the list of pets (main menu option 1) and the corresponding animal will be retrieved from the ArrayList of Animals.
 
@@ -354,7 +354,7 @@ For example:
 
 Please choose an option: 4
 
--- Edit an Animal --
+-- Edit an com.forestnewark.Animal --
 
 What is the numeric ID of the animal you want to edit?: Fred
 
@@ -364,7 +364,7 @@ What is the numeric ID of the animal you want to edit?: 1
 
 Please answer the following questions. Press enter to keep the current values.
 
-Animal Name [Fred]: 
+com.forestnewark.Animal Name [Fred]: 
 Species [Cat]: 
 Breed (optional) []: Tabby
 Description [Fat and happy. Very long when stretched out.]: 
@@ -386,7 +386,7 @@ Description: Fat and happy. Very long when stretched out.
 6) Quit
 
 Please choose an option: 
-Delete an Animal
+Delete an com.forestnewark.Animal
 
 If the user chooses option 5 in the main menu they will be prompted to enter a number for a specific pet. This number comes from the list of pets (main menu option 1) and the corresponding animal will be retrieved from the ArrayList of Animals.
 
@@ -407,7 +407,7 @@ For example:
 
 Please choose an option: 5
 
--- Delete an Animal --
+-- Delete an com.forestnewark.Animal --
 
 What is the numeric ID of the animal you want to delete?: Fred
 
