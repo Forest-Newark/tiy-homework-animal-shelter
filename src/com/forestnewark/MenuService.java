@@ -38,17 +38,25 @@ public class MenuService {
      */
 
     private int mainUserSelectionPrompt() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Please make a selection");
+
         int selection = 0;
+
         if (!scanner.hasNextInt()) {
             String badInput = scanner.next();
+
             System.out.printf("Sorry! \'%s\' is not a valid choice\n", badInput);
+
             mainUserSelectionPrompt();
+
         } else {
+
             selection = scanner.nextInt();
+
             if (selection > 6 || selection < 1) {
+
                 System.out.printf("Sorry! \'%s\' is not a valid option\n", selection);
+
                 mainUserSelectionPrompt();
             }
         }
@@ -74,6 +82,7 @@ public class MenuService {
 
         } else {
             int index = 1;
+
             for (Animal animal : animalArray) {
                 sb.append("# ");
                 sb.append(index);
@@ -99,6 +108,7 @@ public class MenuService {
     public Animal createAnimalPrompt() {
 
         System.out.println("-- Create an Animal --");
+
         System.out.println();
 
         String name = promptToString("Enter animal name(Required): ",true);
@@ -111,6 +121,7 @@ public class MenuService {
 
         System.out.printf("\nYou have successfully created the following animal:\n" +
                 "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s\n", name, species, breed, description);
+
         return new Animal(name, species, breed, description);
 
 
@@ -119,12 +130,15 @@ public class MenuService {
 
     private String promptToString(String prompt, Boolean required) {
         System.out.print(prompt);
+
         String response = scanner.nextLine();
 
         if(response.equals("") && required) {
+
            return promptToString(prompt, required);
 
         }else {
+
             return response;
         }
 
@@ -138,9 +152,13 @@ public class MenuService {
      */
     public void animalDetailPrompt(ArrayList<Animal> animalList) {
         System.out.println("-- Animal Detail -- ");
+
         int index = animalSearch(animalList);
+
         if (index != -1) {
+
             Animal animal = animalList.get(index);
+
             System.out.printf("\nAnimal Details:\n" +
                     "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
         }
@@ -153,36 +171,48 @@ public class MenuService {
      */
     public void editAnimalPrompt(ArrayList<Animal> animalList) {
         System.out.println("-- Edit Animal Information -- ");
-        Scanner scanner = new Scanner(System.in);
+
         int index = animalSearch(animalList);
+
         if (index != -1) {
             Animal animal = animalList.get(index);
+
             System.out.printf("\nCurrent Animal Information:\n" +
                     "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s\n\n", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
 
             System.out.println("Change information or hit return to keep information");
+
             System.out.print("Name[" + animal.getName() + "] : ");
+
             String name = scanner.nextLine();
+
             if (!name.equals("")) {
                 animal.setName(name);
             }
             System.out.print("Species[" + animal.getSpecies() + "] : ");
+
             String species = scanner.nextLine();
+
             if (!species.equals("")) {
                 animal.setSpecies(species);
             }
 
             System.out.print("Breed[" + animal.getBreed() + "] : ");
+
             String breed = scanner.nextLine();
+
             if (!breed.equals("")) {
                 animal.setBreed(breed);
             }
 
             System.out.print("Description[" + animal.getDescription() + "] : ");
+
             String description = scanner.nextLine();
+
             if (!description.equals("")) {
                 animal.setDescription(description);
             }
+
             System.out.printf("\nUpdated Animal Information:\n" +
                     "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
 
@@ -198,9 +228,13 @@ public class MenuService {
      */
     public int deleteAnimalPrompt(ArrayList<Animal> animalList) {
         System.out.println("-- Delete Animal Record --");
+
         int index = animalSearch(animalList);
+
         if (index != -1) {
+
             System.out.printf("Successfully Deleted : %s", animalList.get(index).getName());
+
             return index;
         } else {
             return -1;
@@ -219,35 +253,44 @@ public class MenuService {
 
     private int animalSearch(ArrayList<Animal> animalList) {
         System.out.println("Enter an animal numeric ID or name to search (q to quit):");
-        Scanner scanner = new Scanner(System.in);
+
         if (scanner.hasNextInt()) {
             int id = scanner.nextInt();
+
             if (id < 1 || id > animalList.size()) {
                 System.out.println("This is not a valid ID. Please Try again");
+
                 animalSearch(animalList);
             } else {
                 return id - 1;
             }
         } else {
             String name = scanner.nextLine().toLowerCase();
+
             if (name.equals("q")) {
                 return -1;
             } else {
                 int index = 0;
+
                 boolean animalFound = false;
+
                 for (Animal animal : animalList) {
                     if (animal.getName().toLowerCase().contains(name)) {
+
                         animalFound = true;
+
                         break;
                     } else {
                         index++;
                     }
                 }
                 if (animalFound) {
+
                     return index;
 
                 } else {
                     System.out.println("This is not a valid Name. Please Try again");
+
                     animalSearch(animalList);
                 }
             }

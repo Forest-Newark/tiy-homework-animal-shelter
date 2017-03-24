@@ -21,14 +21,19 @@ public class Main {
 
             if (selection == 1) {
                 menuService.listAllAnimals(animalArrayList);
+
             } else if (selection == 2) {
                 animalArrayList.add(menuService.createAnimalPrompt());
+
             } else if (selection == 3) {
                 menuService.animalDetailPrompt(animalArrayList);
+
             } else if (selection == 4) {
                 menuService.editAnimalPrompt(animalArrayList);
+
             } else if (selection == 5) {
                 int index = menuService.deleteAnimalPrompt(animalArrayList);
+
                 if (index != -1) {
                     animalArrayList.remove(index);
                 }
