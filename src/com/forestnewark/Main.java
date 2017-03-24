@@ -17,34 +17,27 @@ public class Main {
 
         int selection = menuService.mainMenuPrompt();
 
-        while(selection != 6){
+        while (selection != 6) {
 
-            if(selection == 1) {
+            if (selection == 1) {
                 menuService.listAllAnimals(animalArrayList);
-            }
-            else if(selection == 2) {
-               animalArrayList.add(menuService.createAnimalPrompt());
-            }
-            else if(selection == 3) {
+            } else if (selection == 2) {
+                animalArrayList.add(menuService.createAnimalPrompt());
+            } else if (selection == 3) {
                 menuService.animalDetailPrompt(animalArrayList);
-            }
-            else if(selection == 4) {
+            } else if (selection == 4) {
                 menuService.editAnimalPrompt(animalArrayList);
-            }
-            else if(selection == 5) {
-
-                animalArrayList.remove(menuService.deleteAnimalPrompt(animalArrayList));
+            } else if (selection == 5) {
+                int index = menuService.deleteAnimalPrompt(animalArrayList);
+                if (index != -1) {
+                    animalArrayList.remove(index);
+                }
             }
 
             selection = menuService.mainMenuPrompt();
         }
 
         System.out.println("Goodbye");
-
-
-
-
-
 
 
     }
