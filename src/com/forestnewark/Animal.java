@@ -1,5 +1,7 @@
 package com.forestnewark;
 
+import java.time.LocalDate;
+
 /**
  * Created by forestnewark on 3/23/17.
  */
@@ -10,6 +12,7 @@ public class Animal {
     private String breed;
     private String description;
 
+    private LocalDate dateAdded;
 
 
     public Animal(String name, String species, String breed, String description) {
@@ -17,6 +20,7 @@ public class Animal {
         this.species = species;
         this.breed = breed;
         this.description = description;
+        this.dateAdded = LocalDate.now();
     }
 
     public String getName() {
@@ -49,6 +53,10 @@ public class Animal {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDate getDateAdded() {
+        return dateAdded;
     }
 }
 

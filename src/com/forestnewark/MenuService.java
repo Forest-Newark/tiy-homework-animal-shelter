@@ -1,6 +1,7 @@
 package com.forestnewark;
 
-import java.lang.reflect.Array;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +11,8 @@ import java.util.Scanner;
  */
 public class MenuService {
 
-    Scanner scanner = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
 
     /**
      * Prints Main Menu. Calls mainUserSelectionPrompt to get and validate user input
@@ -91,7 +93,10 @@ public class MenuService {
                 sb.append(String.format("%-10s", animal.getName()));
                 sb.append("  ");
                 sb.append("Species: ");
-                sb.append(animal.getSpecies());
+                sb.append(String.format("%-10s", animal.getSpecies()));
+                sb.append("  ");
+                sb.append("Days in Shelter: ");
+                sb.append(ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
                 sb.append("\n");
                 index++;
             }
@@ -131,7 +136,7 @@ public class MenuService {
     private String promptToString(String prompt, Boolean required) {
         System.out.print(prompt);
 
-        String response = scanner.nextLine();
+        String response = scanner.next();
 
         if(response.equals("") && required) {
 
@@ -160,7 +165,9 @@ public class MenuService {
             Animal animal = animalList.get(index);
 
             System.out.printf("\nAnimal Details:\n" +
-                    "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
+                    "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s\nDate Added: %s\nDays In Shelter: %s",
+                    animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription(),
+                    animal.getDateAdded(),ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
         }
     }
 
