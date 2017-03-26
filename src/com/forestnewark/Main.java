@@ -12,7 +12,8 @@ public class Main {
         //Declare and initialize animalArrayList -- Really this should not be in the Main class...
         ArrayList<Animal> animalArrayList = new ArrayList<>();
 
-        //Initialize Menuserive and call mainMenuPrompt Method
+
+        //Initialize MenuSerive and call mainMenuPrompt Method
         MenuService menuService = new MenuService();
 
         int selection = menuService.mainMenuPrompt();
@@ -32,11 +33,9 @@ public class Main {
                 menuService.editAnimalPrompt(animalArrayList);
 
             } else if (selection == 5) {
-                int index = menuService.deleteAnimalPrompt(animalArrayList);
 
-                if (index != -1) {
-                    animalArrayList.remove(index);
-                }
+                menuService.deleteAnimalPrompt(animalArrayList);
+
             }
 
             selection = menuService.mainMenuPrompt();
@@ -44,8 +43,6 @@ public class Main {
 
         System.out.println("Goodbye");
 
-
     }
-
 
 }

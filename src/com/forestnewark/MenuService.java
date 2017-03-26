@@ -3,6 +3,7 @@ package com.forestnewark;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 
@@ -10,13 +11,11 @@ import java.util.Scanner;
  * Created by forestnewark on 3/23/17.
  */
 public class MenuService {
-
+    //Initialize scanner with new line as a delimiter
     Scanner scanner = new Scanner(System.in).useDelimiter("\n");
-
 
     /**
      * Prints Main Menu. Calls mainUserSelectionPrompt to get and validate user input
-     *
      * @return user selection as int value
      */
 
@@ -104,6 +103,13 @@ public class MenuService {
         System.out.println(sb.toString());
     }
 
+
+
+
+
+
+
+
     /**
      * Prompts user for input on creating a new Animal Object
      *
@@ -146,7 +152,6 @@ public class MenuService {
 
             return response;
         }
-
 
     }
 
@@ -191,14 +196,14 @@ public class MenuService {
 
             System.out.print("Name[" + animal.getName() + "] : ");
 
-            String name = scanner.nextLine();
+            String name = scanner.next();
 
             if (!name.equals("")) {
                 animal.setName(name);
             }
             System.out.print("Species[" + animal.getSpecies() + "] : ");
 
-            String species = scanner.nextLine();
+            String species = scanner.next();
 
             if (!species.equals("")) {
                 animal.setSpecies(species);
@@ -206,7 +211,7 @@ public class MenuService {
 
             System.out.print("Breed[" + animal.getBreed() + "] : ");
 
-            String breed = scanner.nextLine();
+            String breed = scanner.next();
 
             if (!breed.equals("")) {
                 animal.setBreed(breed);
@@ -214,7 +219,7 @@ public class MenuService {
 
             System.out.print("Description[" + animal.getDescription() + "] : ");
 
-            String description = scanner.nextLine();
+            String description = scanner.next();
 
             if (!description.equals("")) {
                 animal.setDescription(description);
@@ -233,7 +238,7 @@ public class MenuService {
      * @param animalList ArrayList of animals which contains all animals in the animal shelter
      * @return returns the int index number of the animal to be deleted
      */
-    public int deleteAnimalPrompt(ArrayList<Animal> animalList) {
+    public void deleteAnimalPrompt(ArrayList<Animal> animalList) {
         System.out.println("-- Delete Animal Record --");
 
         int index = animalSearch(animalList);
@@ -241,12 +246,9 @@ public class MenuService {
         if (index != -1) {
 
             System.out.printf("Successfully Deleted : %s", animalList.get(index).getName());
+            animalList.remove(index);
 
-            return index;
-        } else {
-            return -1;
         }
-
     }
 
 
@@ -259,50 +261,61 @@ public class MenuService {
      */
 
     private int animalSearch(ArrayList<Animal> animalList) {
-        System.out.println("Enter an animal numeric ID or name to search (q to quit):");
+        System.out.println("Enter an animal ID or a keyword to search (q to quit):");
+        //Get the search value as a string
+        String search = scanner.next().toLowerCase();
 
-        if (scanner.hasNextInt()) {
-            int id = scanner.nextInt();
-
-            if (id < 1 || id > animalList.size()) {
-                System.out.println("This is not a valid ID. Please Try again");
-
-                animalSearch(animalList);
-            } else {
-                return id - 1;
+        //Check for int and search for animal based of ID number
+        try {
+          int indexSearch = Integer.parseInt(search);
+          if (indexSearch < 1 || indexSearch > animalList.size()) {
+              System.out.println("This is not a valid index");
+              return animalSearch(animalList);
+          } else {
+              return indexSearch - 1;
+          }
+        }
+        catch (Exception e) {
+            if (search.equals("q")) {
+                return - 1;
             }
-        } else {
-            String name = scanner.nextLine().toLowerCase();
-
-            if (name.equals("q")) {
-                return -1;
-            } else {
-                int index = 0;
-
-                boolean animalFound = false;
-
-                for (Animal animal : animalList) {
-                    if (animal.getName().toLowerCase().contains(name)) {
-
-                        animalFound = true;
-
-                        break;
-                    } else {
-                        index++;
-                    }
+            if (search.equals("")){
+                System.out.println("It seems that you have entered an empty search.");
+                return animalSearch(animalList);
+            }
+            HashMap<Animal,Integer> animalResult = new HashMap<>();
+            int index = 0;
+            for (Animal animal : animalList) {
+                if (animal.getName().toLowerCase().contains(search)||animal.getSpecies().toLowerCase().contains(search)|| animal.getBreed().toLowerCase().contains(search)||animal.getDescription().toLowerCase().contains(search)) {
+                    animalResult.put(animal,index);
                 }
-                if (animalFound) {
-
-                    return index;
-
-                } else {
-                    System.out.println("This is not a valid Name. Please Try again");
-
-                    animalSearch(animalList);
+                index++;
+            }
+            //Return results based on Hashmap size
+            if (animalResult.size() == 0) {
+                System.out.println("No animal matched search criteria");
+                return animalSearch(animalList);
+            }else if (animalResult.size() == 1) {
+                return index -1 ;
+            }else {
+                System.out.println("The following animals matched your search:");
+                System.out.println("-- Search Results --");
+                for (Animal animal : animalResult.keySet()) {
+                    System.out.print("# ");
+                    System.out.print(animalResult.get(animal)+1);
+                    System.out.print("  ");
+                    System.out.print("Name: ");
+                    System.out.print(String.format("%-10s", animal.getName()));
+                    System.out.print("  ");
+                    System.out.print("Species: ");
+                    System.out.print(String.format("%-10s", animal.getSpecies()));
+                    System.out.println();
                 }
+                return animalSearch(animalList);
             }
 
         }
-        return -1;
+
     }
+
 }
