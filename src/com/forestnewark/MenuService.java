@@ -8,7 +8,8 @@ import java.util.Scanner;
 
 
 /**
- * Created by forestnewark on 3/23/17.
+ * Created by Forest Newark on 3/23/17. MenuService prints menus for the user, validates input, and returns results
+ * that can be used within the program.
  */
 public class MenuService {
     //Initialize scanner with new line as a delimiter
@@ -16,6 +17,7 @@ public class MenuService {
 
     /**
      * Prints Main Menu. Calls mainUserSelectionPrompt to get and validate user input
+     *
      * @return user selection as int value
      */
 
@@ -33,7 +35,8 @@ public class MenuService {
     }
 
     /**
-     * Private method that is called by the mainMenuPrompt to get user input
+     * Private method that is called by the mainMenuPrompt to get user input.
+     * Validates user selection before returning the user selection as an int value.
      *
      * @return int value of user selection
      */
@@ -105,13 +108,9 @@ public class MenuService {
 
 
 
-
-
-
-
-
     /**
-     * Prompts user for input on creating a new Animal Object
+     * Prompts user for input on creating a new Animal Object. Uses the promptToString method as a helper
+     * to validate user input and control for required and optional input fields.
      *
      * @return Animal created based on user input
      */
@@ -137,6 +136,13 @@ public class MenuService {
 
 
     }
+
+    /**
+     * Prints a provided prompt and validates user input vased on a field being required or optional
+     * @param prompt to be printed out to the user
+     * @param required denotes of te field is required input or optional
+     * @return String of the user response
+     */
 
 
     private String promptToString(String prompt, Boolean required) {
@@ -245,8 +251,17 @@ public class MenuService {
 
         if (index != -1) {
 
-            System.out.printf("Successfully Deleted : %s", animalList.get(index).getName());
-            animalList.remove(index);
+            System.out.printf("Are you sure you want to delete \'%s\'? (Y/N) ",animalList.get(index).getName());
+            String response = scanner.next();
+            if (response.toLowerCase().equals("y")) {
+                System.out.printf("Successfully Deleted : %s", animalList.get(index).getName());
+                animalList.remove(index);
+            }else if (response.toLowerCase().equals("n")) {
+                System.out.printf("%s was NOT deleted" , animalList.get(index).getName());
+
+            } else {
+                System.out.println("I did not understand your selection. Please try again");
+            }
 
         }
     }
@@ -254,7 +269,7 @@ public class MenuService {
 
 
     /**
-     * Searches for an animal based on user supplied ID number or Name. Provides input validation
+     * Searches for an animal based on user supplied ID number or keyword. Provides input validation
      *
      * @param animalList ArrayList of animals which contains all animals in the animal shelter
      * @return int index number for the resulting animal
@@ -275,6 +290,7 @@ public class MenuService {
               return indexSearch - 1;
           }
         }
+        //catch handles any non integer search queries
         catch (Exception e) {
             if (search.equals("q")) {
                 return - 1;

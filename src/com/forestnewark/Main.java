@@ -3,17 +3,18 @@ package com.forestnewark;
 import java.util.ArrayList;
 
 /**
- * Created by forestnewark on 3/23/17.
+ * Created by Forest Newark on 3/23/17. This project models an animal shelter by allowing users to create, read, update, and delete
+ * records of animals within the animal shelter
  */
 public class Main {
 
 
     public static void main(String[] args) {
-        //Declare and initialize animalArrayList -- Really this should not be in the Main class...
+        //Declare and initialize animalArrayList
         ArrayList<Animal> animalArrayList = new ArrayList<>();
 
 
-        //Initialize MenuSerive and call mainMenuPrompt Method
+        //Initialize MenuService and call mainMenuPrompt Method
         MenuService menuService = new MenuService();
 
         int selection = menuService.mainMenuPrompt();
