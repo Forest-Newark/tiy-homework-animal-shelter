@@ -17,8 +17,10 @@ public class Main {
         //Initialize MenuService and call mainMenuPrompt Method
         MenuService menuService = new MenuService();
 
+        //Get user input selection from mainMenuPrompt
         int selection = menuService.mainMenuPrompt();
 
+        //Loop until user selects to quit
         while (selection != 6) {
 
             if (selection == 1) {
@@ -38,11 +40,11 @@ public class Main {
                 menuService.deleteAnimalPrompt(animalArrayList);
 
             }
-
+            // Prompt for user selection again
             selection = menuService.mainMenuPrompt();
         }
 
-        System.out.println("Goodbye");
+        System.out.println("Now exiting the animal shelter!");
 
     }
 
