@@ -117,9 +117,4 @@ public class AnimalTest {
         assertThat(animal.getDateAdded(),equalTo(LocalDate.now()));
     }
 
-
-
-
-
-
 }
