@@ -7,6 +7,8 @@ import org.junit.Test;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,15 +18,26 @@ import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emp
 
 
 /**
- * Created by forestnewark on 3/28/17.
+ * Created by forestnewark on 3/28/17 using TDD
  */
 public class MenuServiceTest {
 
     private MenuService menuService;
+    private ArrayList<Animal> animalTestArray;
 
+    //Setup
     @Before
-    public void initObjecst() {
+    public void initObjects() {
+        //menuService
         menuService = new MenuService();
+        //Arraylist of Animals
+        animalTestArray = new ArrayList<>();
+        animalTestArray.add(new Animal("Melody","Dog","Border Collie","Jumps a lot"));
+        animalTestArray.add(new Animal("Amber","Dog","Golden Retriever","Super Sweet!"));
+        animalTestArray.add(new Animal("Melody","Fish","Gold Fish","Swims a lot"));
+        animalTestArray.add(new Animal("Sasha","Cat","Tabby","Sleeps a lot"));
+        animalTestArray.add(new Animal("Frank","Turtle","",""));
+        animalTestArray.add(new Animal("Lily","Horse","",""));
     }
 
     //Create rule to enable log
@@ -37,17 +50,24 @@ public class MenuServiceTest {
     public final TextFromStandardInputStream systemInMock
             = emptyStandardInputStream();
 
+
+
+
+
+    //MenuService Object Test
     @Test
-    /**
-     * Checks that menuService is not a null object
+    /*
+      Checks that menuService is not a null object
      */
     public void menuServiceIsNotNull() {
         assertThat(menuService,notNullValue());
     }
 
+
+    //Login Prompt Test
     @Test
-    /**
-     * Login prompt ask for choice
+    /*
+      Login prompt ask for choice
      */
     public void loginPromptAskForChoice() {
         systemInMock.provideLines("1");
@@ -56,8 +76,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * Selecting 1 - "Guest Login" on LoginPrompt returns 0
+    /*
+      Selecting 1 - "Guest Login" on LoginPrompt returns 0
      */
     public void loginPromptReturnsZeroWhenGuestLoginOptionSelected(){
         systemInMock.provideLines("1");
@@ -66,8 +86,8 @@ public class MenuServiceTest {
 
 
     @Test
-    /**
-     * Login Prompt prompts for user name
+    /*
+      Login Prompt prompts for user name
      */
     public void loginPromptAskForUserName() {
         systemInMock.provideLines("2","admin","admin");
@@ -77,8 +97,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * Login Prompt prompts for password
+    /*
+      Login Prompt prompts for password
      */
     public void loginPromptAskForPassword(){
         systemInMock.provideLines("2","admin","admin");
@@ -87,25 +107,31 @@ public class MenuServiceTest {
 
     }
 
+
+    //Login Validator test
+
     @Test
-    /**
-     * Login Validator should return 1 for admin username/password
+    /*
+      Login Validator should return 1 for admin username/password
      */
     public void loginValidatorReturnsOneForAdmin(){
         assertThat(menuService.loginValidator("admin","admin"),equalTo(1));
     }
 
     @Test
-    /**
-     * Login Validator should return 0 for non-admin username/password
+    /*
+      Login Validator should return 0 for non-admin username/password
      */
     public void loginValidatorReturnsZeroForNonAdmin(){
         assertThat(menuService.loginValidator("Forest","Newark"),equalTo(0));
     }
 
+
+    //Main Menu Prompt test
+
     @Test
-    /**
-     * mainMenu prompt indicates Guest user when provided false argument
+    /*
+      mainMenu prompt indicates Guest user when provided false argument
      */
 
     public void mainMenuIndicatesGuestWithFalseArgument() {
@@ -114,8 +140,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * mainMenu prompt indicates Admin user when provided true argument
+    /*
+      mainMenu prompt indicates Admin user when provided true argument
      */
     public void mainMenuIndicatesAdminWithTrueArgument(){
         menuService.mainMenuPrompt(true);
@@ -123,8 +149,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * mainMenu prompt should include List animals when provided false
+    /*
+      mainMenu prompt should include List animals when provided false
      */
     public void mainMenuPromptAlwaysIncludesListAnimals() {
         menuService.mainMenuPrompt(false);
@@ -132,8 +158,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * mainMenu prompt should not include Delete Animal when provided false
+    /*
+      mainMenu prompt should not include Delete Animal when provided false
      */
     public void mainMenuPromptDoesNotIncludeDeleteAnimalWhenProivdedFalse() {
         menuService.mainMenuPrompt(false);
@@ -141,8 +167,8 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * mainMenuPrompt should include List Animals when provided True
+    /*
+      mainMenuPrompt should include List Animals when provided True
      */
     public void mainMethodPromptIncludesListAnimalsWhenProvidedTrue(){
         menuService.mainMenuPrompt(true);
@@ -150,22 +176,178 @@ public class MenuServiceTest {
     }
 
     @Test
-    /**
-     * mainMenPrompt should include Delete Animal when provided True
+    /*
+      mainMenPrompt should include Delete Animal when provided True
      */
     public void mainMenuPromptIncludesDeleteAnimalWhenProvidedTrue(){
         menuService.mainMenuPrompt(true);
         assertThat(systemOutRule.getLog(),containsString("Delete Animal"));
     }
 
+
+    //User Selection Prompt Test
     @Test
-    /**
-     * userSelectionPrompt should display correct prompt
+    /*
+      userSelectionPrompt does not accept non-integer value and reprompts user
      */
-    public void userSelectionPromptDisplaysCorrectPrompt(){
+    public void userSelectionPromptDoesNotAcceptNonIntegerValue(){
+        systemInMock.provideLines("John","1");
         menuService.userSelectionPrompt(true);
-        assertThat(systemOutRule.getLog(),containsString("Please choose an option: "));
+        assertThat(systemOutRule.getLog(),containsString("not a valid selection."));
+
     }
+
+    @Test
+    /*
+     userSelectionPrompt prints "not a valid selection." if the user enters 0
+     */
+    public void userSelectionPromptZeroIsNotValidSelection() {
+        systemInMock.provideLines("0","1");
+        menuService.userSelectionPrompt(true);
+        assertThat(systemOutRule.getLog(),containsString("not a valid selection."));
+    }
+
+
+    @Test
+    /*
+      userSelectionPrompt should return 6 if boolean admin is false and the user has entered 3
+     */
+    public void userSelectionPromptReturns6IfUserEnters3AndAdminIsFalse() {
+        systemInMock.provideLines("3");
+        assertThat(menuService.userSelectionPrompt(false),equalTo(6));
+    }
+
+    @Test
+    /*
+      userSelectionPrompt should return 3 if boolean admin is true and the user has entered 3
+     */
+    public void userSelectionPromptReturns3IfUserEnters3AndAdminIsTrue() {
+        systemInMock.provideLines("3");
+        assertThat(menuService.userSelectionPrompt(true),equalTo(3));
+    }
+
+    @Test
+    /*
+      userSelectionPrompt should reject any number higher than 3 if admin is false
+     */
+    public void userSelectionPromptRejectsNumberHighThan3WithAdminFalse() {
+        systemInMock.provideLines("4","1");
+        menuService.userSelectionPrompt(false);
+        assertThat(systemOutRule.getLog(),containsString("not a valid selection."));
+    }
+
+
+    //List Animal Tests
+    @Test
+    /*
+      listAnimal displays correct Menu Label
+     */
+    public void listAnimalDisplaysMenuLabel(){
+        menuService.listAnimal(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("-- Animal List --"));
+
+    }
+
+    @Test
+    /*
+    list animal displays correct animal name and species
+     */
+    public void listAnimalDisplaysCorrectAnimalInformation(){
+        menuService.listAnimal(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("Amber            │ Dog              "));
+
+    }
+
+    @Test
+    /*
+    listAnimal prints the correct number of animals
+     */
+    public void listAnimalPrintsCorrectNumberOfAniamls(){
+        int arraySize = animalTestArray.size();
+        menuService.listAnimal(animalTestArray);
+        String logFile = systemOutRule.getLog();
+        String[] characters = logFile.split("\\.");
+        int runningCount = 0;
+        int animalTotal = 0;
+        for (String character: characters) {
+            try{
+
+                int number = Integer.parseInt(character);
+                if (number > runningCount) {
+                    runningCount++;
+                    animalTotal++;
+                }
+
+            }catch (Exception e) {
+                //Not an int!
+            }
+        }
+        assertThat(animalTotal,equalTo(animalTotal));
+
+    }
+
+
+    //Animal Detail Test
+    @Test
+    /*
+      animalDetail displays correct Menu Label
+     */
+    public void animalDetailDisplaysMenuLabel(){
+        menuService.animalDetail();
+        assertThat(systemOutRule.getLog(),containsString("-- Animal Detail --"));
+
+
+    }
+
+    //Create Animal Test
+    @Test
+    /*
+     createAnimal displays correct Menu Label
+     */
+    public void createAnimalDisplaysMenuLabel(){
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("-- Create Animal --"));
+
+    }
+
+
+
+    //Edit Animal Test
+    @Test
+    /*
+    editAnimal displays correct Menu Label
+     */
+    public void editAnimalDisplaysMenuLabel(){
+        menuService.editAnimal();
+        assertThat(systemOutRule.getLog(),containsString("-- Edit Animal --"));
+
+    }
+
+
+
+    //Delete Animal Test
+    @Test
+    /*
+    deleteAnimal displays correct Menu Label
+     */
+    public void deleteAnimalDisplaysMenuLabel(){
+        menuService.deleteAnimal();
+        assertThat(systemOutRule.getLog(),containsString("-- Delete Animal --"));
+
+    }
+
+
+    //Quit Test
+    @Test
+    /*
+    Quit displays correct Menu Label
+     */
+    public void quitDisplaysMenuLabel(){
+        menuService.quit();
+        assertThat(systemOutRule.getLog(),containsString("-- Quit --"));
+
+    }
+
 
 
 

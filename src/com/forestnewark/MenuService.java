@@ -2,9 +2,17 @@ package com.forestnewark;
 
 
 import com.github.lalyos.jfiglet.FigletFont;
+import de.vandermeer.asciitable.v2.RenderedTable;
+import de.vandermeer.asciitable.v2.V2_AsciiTable;
+import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
+import de.vandermeer.asciitable.v2.render.WidthAbsoluteEven;
+import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -14,7 +22,7 @@ import java.util.Scanner;
 public class MenuService {
 
 
-    public void welcomePrompt(){
+    public void welcomePrompt() {
 
         System.out.println();
         String asciiArt1 = null;
@@ -39,7 +47,7 @@ public class MenuService {
 
         if (Integer.parseInt(choice) == 1) {
             return 0;
-        }else if (Integer.parseInt(choice) == 2) {
+        } else if (Integer.parseInt(choice) == 2) {
 
             System.out.println("Username: ");
 
@@ -47,8 +55,8 @@ public class MenuService {
 
             System.out.println("Password: ");
             String password = scanner.next();
-            return loginValidator(username,password);
-        }else {
+            return loginValidator(username, password);
+        } else {
             System.out.println("Not a valid option");
             return loginPrompt();
         }
@@ -56,7 +64,7 @@ public class MenuService {
     }
 
     public int loginValidator(String username, String password) {
-        if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")){
+        if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")) {
             return 1;
         }
         return 0;
@@ -64,7 +72,7 @@ public class MenuService {
 
 
     public void mainMenuPrompt(boolean admin) {
-       // String user = admin ? "Admin" : "Guest";
+        // String user = admin ? "Admin" : "Guest";
         StringBuilder sb = new StringBuilder();
         sb.append("-- Main Menu --\n");
         sb.append(String.format("%5s", "["));
@@ -80,11 +88,76 @@ public class MenuService {
         sb.append(admin ? "6) Quit" : "3) Quit");
         System.out.println(sb.toString());
 
+    }
 
+    public int userSelectionPrompt(boolean admin) {
+        System.out.println("Please choose an option: ");
+        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
+        String input = scanner.next();
+        try {
+            int selection = Integer.parseInt(input);
+            if (selection < 1 || (selection > 6 && admin )|| (selection > 3 && !admin)) {
+                System.out.println("\'" + selection + "\' is not a valid selection.");
+                return userSelectionPrompt(admin);
+            } else if (!admin) {
+                if (selection == 3) {
+                    return 6;
+                }else {
+                    return selection;
+                }
+            } else {
+                return selection;
+            }
+        } catch(Exception e) {
+            System.out.println("\'" + input + "\' is not a valid selection.");
+            return userSelectionPrompt(admin);
+        }
 
     }
-    public void userSelectionPrompt(boolean admin) {
-        System.out.println("Please choose an option: ");
+
+    public void listAnimal(ArrayList<Animal> animalArrayList) {
+        System.out.println("-- Animal List -- \n");
+
+        V2_AsciiTable at = new V2_AsciiTable();
+        at.addRule();
+        at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
+        at.addRule();
+        int index = 1;
+        for (Animal animal : animalArrayList) {
+            at.addRow(index, animal.getName(), animal.getSpecies(), ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
+            at.addRule();
+            index++;
+        }
+
+        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+        rend.setWidth(new WidthAbsoluteEven(76));
+        RenderedTable rt = rend.render(at);
+        System.out.println(rt);
+
+    }
+
+    public void animalDetail() {
+        System.out.println("-- Animal Detail --");
+    }
+
+    public Animal createAnimal() {
+        System.out.println("-- Create Animal --");
+        return null;
+    }
+
+
+    public void editAnimal() {
+        System.out.println("-- Edit Animal --");
+    }
+
+    public void deleteAnimal() {
+        System.out.println("-- Delete Animal --");
+    }
+
+    public void quit() {
+        System.out.println("-- Quit --");
     }
 }
 
