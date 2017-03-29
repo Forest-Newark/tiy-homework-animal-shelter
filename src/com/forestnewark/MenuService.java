@@ -10,10 +10,13 @@ import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 
 import java.io.IOException;
+import java.sql.Array;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 /**
  * Created by Forest Newark on 3/28/17 using TDD. MenuService prints menus for the user, validates input, and returns results
@@ -97,19 +100,19 @@ public class MenuService {
         String input = scanner.next();
         try {
             int selection = Integer.parseInt(input);
-            if (selection < 1 || (selection > 6 && admin )|| (selection > 3 && !admin)) {
+            if (selection < 1 || (selection > 6 && admin) || (selection > 3 && !admin)) {
                 System.out.println("\'" + selection + "\' is not a valid selection.");
                 return userSelectionPrompt(admin);
             } else if (!admin) {
                 if (selection == 3) {
                     return 6;
-                }else {
+                } else {
                     return selection;
                 }
             } else {
                 return selection;
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("\'" + input + "\' is not a valid selection.");
             return userSelectionPrompt(admin);
         }
@@ -159,6 +162,81 @@ public class MenuService {
     public void quit() {
         System.out.println("-- Quit --");
     }
+
+    public int animalSearch(ArrayList<Animal> animalArrayList) {
+        if (animalArrayList.size() == 0) {
+            System.out.println("The Shelter is currently EMPTY! Please check back soon!");
+        } else {
+            System.out.println("Enter valid Id or a keyword to search for animal(s): ");
+            Scanner scanner = new Scanner(System.in);
+            //Get the search value as a string
+            String search = scanner.next().toLowerCase();
+
+            //Check for int and search for animal based of ID number
+            try {
+                int indexSearch = Integer.parseInt(search);
+                if (indexSearch < 1 || indexSearch > animalArrayList.size()) {
+                    System.out.println("This is not a valid index");
+                    return animalSearch(animalArrayList);
+                } else {
+                    return indexSearch - 1;
+                }
+            }
+            //catch handles any non integer search queries
+            catch (Exception e) {
+                if (search.equals("q")) {
+                    return -1;
+                }
+                if (search.equals("")) {
+                    System.out.println("It seems that you have entered an empty search...\n");
+                    return animalSearch(animalArrayList);
+                }
+
+                Map<Integer, Animal> animalResult = new TreeMap<>();
+                int index = 0;
+                for (Animal animal : animalArrayList) {
+                    if (animal.getName().toLowerCase().contains(search) || animal.getSpecies().toLowerCase().contains(search) || animal.getBreed().toLowerCase().contains(search) || animal.getDescription().toLowerCase().contains(search)) {
+
+                        animalResult.put(index, animal);
+                    }
+                    index++;
+                }
+                //Return results based on Hashmap size
+                if (animalResult.size() == 0) {
+                    System.out.println("No animal matched search criteria");
+                    return animalSearch(animalArrayList);
+                } else if (animalResult.size() == 1) {
+                    return index - 1;
+                } else {
+
+                    System.out.println("The following animals matched your search:");
+                    System.out.println("-- Search Results --");
+                    //for (Animal animal : animalResult.keySet()) {
+                    for (Map.Entry<Integer, Animal> entry : animalResult.entrySet()) {
+                        System.out.print("ID #");
+                        System.out.print(entry.getKey());
+                        //System.out.print(animalResult.get(animal) + 1);
+                        System.out.print("  ");
+                        System.out.print("Name: ");
+                        System.out.print(String.format("%-10s", entry.getValue().getName()));
+                        System.out.print("  ");
+                        System.out.print("Species: ");
+                        System.out.print(String.format("%-10s", entry.getValue().getSpecies()));
+                        System.out.println();
+                    }
+                    return animalSearch(animalArrayList);
+                }
+
+
+            }
+
+
+        }
+
+        return 0;
+    }
+
+
 }
 
 

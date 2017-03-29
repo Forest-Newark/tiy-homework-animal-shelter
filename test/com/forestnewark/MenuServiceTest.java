@@ -24,6 +24,7 @@ public class MenuServiceTest {
 
     private MenuService menuService;
     private ArrayList<Animal> animalTestArray;
+    private ArrayList<Animal> emptyTestArray;
 
     //Setup
     @Before
@@ -31,6 +32,7 @@ public class MenuServiceTest {
         //menuService
         menuService = new MenuService();
         //Arraylist of Animals
+        emptyTestArray = new ArrayList<>();
         animalTestArray = new ArrayList<>();
         animalTestArray.add(new Animal("Melody","Dog","Border Collie","Jumps a lot"));
         animalTestArray.add(new Animal("Amber","Dog","Golden Retriever","Super Sweet!"));
@@ -286,6 +288,37 @@ public class MenuServiceTest {
 
     }
 
+    //Animal Search Test
+   @Test
+   public void animalSearchDisplaysEmptyShelterMessage(){
+        menuService.animalSearch(emptyTestArray);
+        assertThat(systemOutRule.getLog(),containsString("The Shelter is currently EMPTY! Please check back soon!"));
+
+
+   }
+
+    @Test
+    /*
+    animalSearch displays correct initial prompt to users if
+     */
+    public void animalSearchDisplaysCorrectPrompt() {
+        systemInMock.provideLines("1");
+        menuService.animalSearch(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("Enter valid Id or a keyword to search for animal(s): "));
+    }
+
+    @Test
+    /*
+    animalSearch rejects int input less then 1
+     */
+    public void animalSearchValidatesInputLessThen1(){
+        systemInMock.provideLines("0","1");
+        menuService.animalSearch(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("This is not a valid index"));
+    }
+
+
+
 
     //Animal Detail Test
     @Test
@@ -298,6 +331,11 @@ public class MenuServiceTest {
 
 
     }
+
+
+
+
+
 
     //Create Animal Test
     @Test
