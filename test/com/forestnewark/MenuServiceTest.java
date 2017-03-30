@@ -304,7 +304,7 @@ public class MenuServiceTest {
     public void animalSearchDisplaysCorrectPrompt() {
         systemInMock.provideLines("1");
         menuService.animalSearch(animalTestArray);
-        assertThat(systemOutRule.getLog(),containsString("Enter valid Id or a keyword to search for animal(s): "));
+        assertThat(systemOutRule.getLog(),containsString("Enter valid Id or a keyword to search for animal(s) [q to quit]: "));
     }
 
     @Test
@@ -316,8 +316,44 @@ public class MenuServiceTest {
         menuService.animalSearch(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("This is not a valid index"));
     }
+    @Test
+    /*
+    animalSearch returns -1 when the user enters q
+     */
+    public void animalReturnsZeroWhenUserEntersQ() {
+        systemInMock.provideLines("q");
+        assertThat(menuService.animalSearch(animalTestArray),equalTo(-1));
+    }
 
+    @Test
+    /*
+    animalSearch returns correct message when no animal matches search criteria
+     */
+    public void animalSearchReturnsNoMatechesMethod() {
+        systemInMock.provideLines("Lollipop","1");
+        menuService.animalSearch(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("No animal matched search criteria"));
 
+    }
+
+    @Test
+    /*
+    animalSearch returns correct index for a unique animal
+     */
+    public void animalSearchReturnsIndexForUniqueMatch(){
+        systemInMock.provideLines("Lily");
+        assertThat(menuService.animalSearch(animalTestArray),equalTo(5));
+    }
+
+    @Test
+    /*
+    animalSearch returns correct prompt for multiple matches
+     */
+    public void animalSearchReturnsPromptForMultipleMatches() {
+        systemInMock.provideLines("Melody", "2");
+        menuService.animalSearch(animalTestArray);
+        assertThat(systemOutRule.getLog(),containsString("The following animals matched your search:"));
+    }
 
 
     //Animal Detail Test
@@ -333,10 +369,6 @@ public class MenuServiceTest {
     }
 
 
-
-
-
-
     //Create Animal Test
     @Test
     /*
@@ -347,7 +379,6 @@ public class MenuServiceTest {
         assertThat(systemOutRule.getLog(),containsString("-- Create Animal --"));
 
     }
-
 
 
     //Edit Animal Test

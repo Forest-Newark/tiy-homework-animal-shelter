@@ -10,7 +10,6 @@ import de.vandermeer.asciitable.v2.themes.V2_E_TableThemes;
 
 
 import java.io.IOException;
-import java.sql.Array;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -121,6 +120,15 @@ public class MenuService {
 
     public void listAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal List -- \n");
+        Animal[] listArray = new Animal[animalArrayList.size()];
+        for (int x = 0;x < animalArrayList.size();x++) {
+            listArray[x] = animalArrayList.get(x);
+        }
+
+        System.out.println(tableBuilder(listArray));
+
+
+
 
         V2_AsciiTable at = new V2_AsciiTable();
         at.addRule();
@@ -134,12 +142,38 @@ public class MenuService {
         }
 
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+
         rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
         rend.setWidth(new WidthAbsoluteEven(76));
+
         RenderedTable rt = rend.render(at);
         System.out.println(rt);
 
     }
+
+    private RenderedTable tableBuilder(Animal[] animalList) {
+
+        V2_AsciiTable at = new V2_AsciiTable();
+        at.addRule();
+        at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
+        at.addRule();
+        int index = 1;
+        for (int x = 0;x < animalList.length;x++) {
+            at.addRow(index, animalList[x].getName(), animalList[x].getSpecies(), ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+            at.addRule();
+            index++;
+        }
+
+        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+
+        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+        rend.setWidth(new WidthAbsoluteEven(76));
+
+        RenderedTable rt = rend.render(at);
+        return rt;
+    }
+
+
 
     public void animalDetail() {
         System.out.println("-- Animal Detail --");
@@ -167,7 +201,7 @@ public class MenuService {
         if (animalArrayList.size() == 0) {
             System.out.println("The Shelter is currently EMPTY! Please check back soon!");
         } else {
-            System.out.println("Enter valid Id or a keyword to search for animal(s): ");
+            System.out.println("Enter valid Id or a keyword to search for animal(s) [q to quit]: ");
             Scanner scanner = new Scanner(System.in);
             //Get the search value as a string
             String search = scanner.next().toLowerCase();
@@ -208,13 +242,13 @@ public class MenuService {
                 } else if (animalResult.size() == 1) {
                     return index - 1;
                 } else {
-
                     System.out.println("The following animals matched your search:");
+
                     System.out.println("-- Search Results --");
                     //for (Animal animal : animalResult.keySet()) {
                     for (Map.Entry<Integer, Animal> entry : animalResult.entrySet()) {
                         System.out.print("ID #");
-                        System.out.print(entry.getKey());
+                        System.out.print(entry.getKey() + 1);
                         //System.out.print(animalResult.get(animal) + 1);
                         System.out.print("  ");
                         System.out.print("Name: ");
@@ -227,15 +261,11 @@ public class MenuService {
                     return animalSearch(animalArrayList);
                 }
 
-
             }
 
-
         }
-
         return 0;
     }
-
 
 }
 
