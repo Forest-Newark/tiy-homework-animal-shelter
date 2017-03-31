@@ -175,8 +175,6 @@ public class MenuService {
 
         }
 
-
-
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
 
         rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
@@ -185,8 +183,6 @@ public class MenuService {
         RenderedTable rt = rend.render(at);
         return rt;
     }
-
-
 
 
     //Prints out specific information on animal
