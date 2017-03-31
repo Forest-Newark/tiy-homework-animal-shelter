@@ -4,6 +4,8 @@ package com.forestnewark;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.contrib.java.lang.system.Assertion;
+import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
 
@@ -375,10 +377,63 @@ public class MenuServiceTest {
      createAnimal displays correct Menu Label
      */
     public void createAnimalDisplaysMenuLabel(){
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
         menuService.createAnimal();
         assertThat(systemOutRule.getLog(),containsString("-- Create Animal --"));
 
     }
+
+    @Test
+    /*
+    createAnimal prompts for animal name (required)
+     */
+    public void createAnimalPromptsForAnimalName() {
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("Animal Name [Required]"));
+
+    }
+
+    @Test
+    /*
+    createAnimal prompts for animal species (required)
+     */
+    public void createAnimalPromptsForAnimalSpecies() {
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("Animal Species [Required]"));
+    }
+
+    @Test
+    /*
+    createAnimal prompts for animal breed (optional)
+     */
+    public void createAnimalPromptsForAnimalBreed() {
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("Animal Breed [Optional]"));
+    }
+
+    @Test
+    /*
+    createAnimal prompts for animal description (optional)
+     */
+    public void createAnimalPromptsForAnimalDescription() {
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("Animal Description [Optional]"));
+    }
+
+    @Test
+    /*
+    createAnimal prints out new animal
+     */
+    public void createAnimalReturnsAnAnimal() {
+        systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
+        menuService.createAnimal();
+        assertThat(systemOutRule.getLog(),containsString("Freddy"));
+    }
+
 
 
     //Edit Animal Test
@@ -406,16 +461,56 @@ public class MenuServiceTest {
     }
 
 
+    @Rule
+    public final ExpectedSystemExit exit = ExpectedSystemExit.none();
+
     //Quit Test
     @Test
     /*
     Quit displays correct Menu Label
      */
     public void quitDisplaysMenuLabel(){
+        exit.expectSystemExit();
+        systemInMock.provideLines("Y");
         menuService.quit();
         assertThat(systemOutRule.getLog(),containsString("-- Quit --"));
 
     }
+
+    @Test
+    /*
+    method confirms user's intent to exit
+     */
+    public void quitConfirmsExit() {
+        exit.expectSystemExit();
+        systemInMock.provideLines("Y");
+        menuService.quit();
+        assertThat(systemOutRule.getLog(),containsString("-- Quit --"));
+    }
+
+    @Test
+    /*
+    method does not exit if user selects "N"
+     */
+    public void userDidNotConfirmMethod() {
+        systemInMock.provideLines("N");
+        menuService.quit();
+        assertThat(systemOutRule.getLog(),containsString("Returning to main menu"));
+    }
+
+    @Test
+    /*
+    method does not exit if user supplies anything except for "Y"
+     */
+    public void programDoesNotQuitWIthAnyInputExceptY(){
+        systemInMock.provideLines("HELLO!");
+        menuService.quit();
+        assertThat(systemOutRule.getLog(),containsString("Returning to main menu"));
+    }
+
+
+
+
 
 
 

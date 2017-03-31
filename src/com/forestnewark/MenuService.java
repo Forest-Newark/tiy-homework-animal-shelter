@@ -23,7 +23,7 @@ import java.util.TreeMap;
  */
 public class MenuService {
 
-
+    //Prints Welcome Prompt with ASCII
     public void welcomePrompt() {
 
         System.out.println();
@@ -38,6 +38,11 @@ public class MenuService {
 
         loginPrompt();
     }
+
+
+
+
+    //Prints login Prompt (Guest/Admin) Login
 
     public int loginPrompt() {
         System.out.println("Please Select a Login Option below");
@@ -65,6 +70,9 @@ public class MenuService {
 
     }
 
+
+    //Validates Admin login, currently only accepts username: admin & password: admin
+
     public int loginValidator(String username, String password) {
         if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")) {
             return 1;
@@ -72,6 +80,8 @@ public class MenuService {
         return 0;
     }
 
+
+    //Prints main menu prompts, filters based on admin/guest login
 
     public void mainMenuPrompt(boolean admin) {
         // String user = admin ? "Admin" : "Guest";
@@ -91,6 +101,10 @@ public class MenuService {
         System.out.println(sb.toString());
 
     }
+
+
+
+    // Returns int value based on user selection, contorls for admin/guest menu
 
     public int userSelectionPrompt(boolean admin) {
         System.out.println("Please choose an option: ");
@@ -118,6 +132,8 @@ public class MenuService {
 
     }
 
+
+    //Prints out animals with provided arraylist, uses tableBuilder as helper method
     public void listAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal List -- \n");
         Animal[] listArray = new Animal[animalArrayList.size()];
@@ -127,29 +143,9 @@ public class MenuService {
 
         System.out.println(tableBuilder(listArray));
 
-
-
-
-        V2_AsciiTable at = new V2_AsciiTable();
-        at.addRule();
-        at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
-        at.addRule();
-        int index = 1;
-        for (Animal animal : animalArrayList) {
-            at.addRow(index, animal.getName(), animal.getSpecies(), ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
-            at.addRule();
-            index++;
-        }
-
-        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
-
-        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
-        rend.setWidth(new WidthAbsoluteEven(76));
-
-        RenderedTable rt = rend.render(at);
-        System.out.println(rt);
-
     }
+
+    //Prints out a formatted table from animal Array
 
     private RenderedTable tableBuilder(Animal[] animalList) {
 
@@ -175,27 +171,84 @@ public class MenuService {
 
 
 
+
+    //Prints out specific information on animal
+    //TODO: FIX THIS SHIT!
     public void animalDetail() {
         System.out.println("-- Animal Detail --");
     }
 
+
+
+    //Prompts user to create new animal
+    //TODO: Control for empty values
     public Animal createAnimal() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("-- Create Animal --");
-        return null;
+        System.out.println("Animal Name [Required]: ");
+        String name = scanner.next();
+        System.out.println("Animal Species [Required]: ");
+        String species = scanner.next();
+        System.out.println("Animal Breed [Optional]: ");
+        String breed = scanner.next();
+        System.out.println("Animal Description [Optional]:");
+        String description = scanner.next();
+        System.out.println("You Created the following animal!");
+        Animal animal = new Animal(name,species,breed,description);
+        animalPrinter(animal);
+        return animal;
     }
 
 
+    //Prints out a single animal with formatted table
+    public void animalPrinter(Animal animal) {
+        V2_AsciiTable at = new V2_AsciiTable();
+        at.addRule();
+        at.addRow( "NAME", "SPECIES", "Breed", "Description");
+        at.addRule();
+        at.addRow(animal.getName(),animal.getSpecies(),animal.getBreed(),animal.getDescription());
+        at.addRule();
+
+        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
+
+        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
+        rend.setWidth(new WidthAbsoluteEven(76));
+
+        RenderedTable rt = rend.render(at);
+        System.out.println(rt);
+
+    }
+
+
+    //Allows user to edit Animal
+    //TODO: Write this method
     public void editAnimal() {
         System.out.println("-- Edit Animal --");
     }
 
+
+    //Allows user to delete an animal
+    //TODO: Write this method
     public void deleteAnimal() {
         System.out.println("-- Delete Animal --");
     }
 
+    //Quits the program with user verification
     public void quit() {
+        Scanner scanner = new Scanner(System.in);
         System.out.println("-- Quit --");
+        System.out.println("Are you sure you want to quit? (Y/N)");
+        if (scanner.next().toLowerCase().contains("y")){
+            System.out.println("Goodbye");
+            System.exit(0);
+        }else {
+            System.out.println("Returning to main menu");
+        }
     }
+
+
+    //Search for animals
+    //TODO: Fix Print of of Animals to formatted table
 
     public int animalSearch(ArrayList<Animal> animalArrayList) {
         if (animalArrayList.size() == 0) {
