@@ -24,7 +24,7 @@ import java.util.TreeMap;
 public class MenuService {
 
     //Prints Welcome Prompt with ASCII
-    public void welcomePrompt() {
+    public boolean welcomePrompt() {
 
         System.out.println();
         String asciiArt1 = null;
@@ -36,7 +36,7 @@ public class MenuService {
             e.printStackTrace();
         }
 
-        loginPrompt();
+        return loginPrompt();
     }
 
 
@@ -44,7 +44,7 @@ public class MenuService {
 
     //Prints login Prompt (Guest/Admin) Login
 
-    public int loginPrompt() {
+    public boolean loginPrompt() {
         System.out.println("Please Select a Login Option below");
         System.out.println("1 - Guest Login");
         System.out.println("2 - Admin Login");
@@ -53,7 +53,7 @@ public class MenuService {
         String choice = scanner.next();
 
         if (Integer.parseInt(choice) == 1) {
-            return 0;
+            return false;
         } else if (Integer.parseInt(choice) == 2) {
 
             System.out.println("Username: ");
@@ -73,17 +73,17 @@ public class MenuService {
 
     //Validates Admin login, currently only accepts username: admin & password: admin
 
-    public int loginValidator(String username, String password) {
+    public boolean loginValidator(String username, String password) {
         if (username.toLowerCase().equals("admin") && password.toLowerCase().equals("admin")) {
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 
 
     //Prints main menu prompts, filters based on admin/guest login
 
-    public void mainMenuPrompt(boolean admin) {
+    public int mainMenuPrompt(boolean admin) {
         // String user = admin ? "Admin" : "Guest";
         StringBuilder sb = new StringBuilder();
         sb.append("-- Main Menu --\n");
@@ -99,6 +99,7 @@ public class MenuService {
         }
         sb.append(admin ? "6) Quit" : "3) Quit");
         System.out.println(sb.toString());
+        return userSelectionPrompt(admin);
 
     }
 
@@ -141,24 +142,40 @@ public class MenuService {
             listArray[x] = animalArrayList.get(x);
         }
 
-        System.out.println(tableBuilder(listArray));
+        System.out.println(tableBuilder(listArray,true));
 
     }
 
     //Prints out a formatted table from animal Array
 
-    private RenderedTable tableBuilder(Animal[] animalList) {
+    private RenderedTable tableBuilder(Animal[] animalList,boolean partial) {
+
 
         V2_AsciiTable at = new V2_AsciiTable();
         at.addRule();
-        at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
-        at.addRule();
         int index = 1;
-        for (int x = 0;x < animalList.length;x++) {
-            at.addRow(index, animalList[x].getName(), animalList[x].getSpecies(), ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+        if (partial){
+            at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
             at.addRule();
-            index++;
+
+            for (int x = 0;x < animalList.length;x++) {
+                at.addRow(index, animalList[x].getName(), animalList[x].getSpecies(), ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+                at.addRule();
+                index++;
+            }
         }
+        if (!partial){
+            at.addRow("ID","NAME", "SPECIES", "Breed", "Description", "Date Added", "Days In Shelter");
+            at.addRule();
+            for (int x = 0;x < animalList.length;x++) {
+                at.addRow(index, animalList[x].getName(),animalList[x].getSpecies(),animalList[x].getBreed(),animalList[x].getDescription(),animalList[x].getDateAdded(),ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+                at.addRule();
+                index++;
+            }
+
+        }
+
+
 
         V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
 
@@ -195,30 +212,10 @@ public class MenuService {
         String description = scanner.next();
         System.out.println("You Created the following animal!");
         Animal animal = new Animal(name,species,breed,description);
-        animalPrinter(animal);
+        Animal[] animalArray = {animal};
+        System.out.println(tableBuilder(animalArray,false));
         return animal;
     }
-
-
-    //Prints out a single animal with formatted table
-    public void animalPrinter(Animal animal) {
-        V2_AsciiTable at = new V2_AsciiTable();
-        at.addRule();
-        at.addRow( "NAME", "SPECIES", "Breed", "Description");
-        at.addRule();
-        at.addRow(animal.getName(),animal.getSpecies(),animal.getBreed(),animal.getDescription());
-        at.addRule();
-
-        V2_AsciiTableRenderer rend = new V2_AsciiTableRenderer();
-
-        rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
-        rend.setWidth(new WidthAbsoluteEven(76));
-
-        RenderedTable rt = rend.render(at);
-        System.out.println(rt);
-
-    }
-
 
     //Allows user to edit Animal
     //TODO: Write this method
@@ -229,8 +226,10 @@ public class MenuService {
 
     //Allows user to delete an animal
     //TODO: Write this method
-    public void deleteAnimal() {
+    public int deleteAnimal() {
         System.out.println("-- Delete Animal --");
+
+        return 0;
     }
 
     //Quits the program with user verification
