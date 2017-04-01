@@ -4,7 +4,6 @@ package com.forestnewark;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.contrib.java.lang.system.Assertion;
 import org.junit.contrib.java.lang.system.ExpectedSystemExit;
 import org.junit.contrib.java.lang.system.SystemOutRule;
 import org.junit.contrib.java.lang.system.TextFromStandardInputStream;
@@ -82,7 +81,7 @@ public class MenuServiceTest {
      */
     public void loginPromptReturnsZeroWhenGuestLoginOptionSelected(){
         systemInMock.provideLines("1");
-        assertThat(menuService.loginPrompt(),equalTo(0));
+        assertThat(menuService.loginPrompt(),equalTo(false));
     }
 
 
@@ -116,7 +115,7 @@ public class MenuServiceTest {
       Login Validator should return 1 for admin username/password
      */
     public void loginValidatorReturnsOneForAdmin(){
-        assertThat(menuService.loginValidator("admin","admin"),equalTo(1));
+        assertThat(menuService.loginValidator("admin","admin"),equalTo(true));
     }
 
     @Test
@@ -124,7 +123,7 @@ public class MenuServiceTest {
       Login Validator should return 0 for non-admin username/password
      */
     public void loginValidatorReturnsZeroForNonAdmin(){
-        assertThat(menuService.loginValidator("Forest","Newark"),equalTo(0));
+        assertThat(menuService.loginValidator("Forest","Newark"),equalTo(false));
     }
 
 
@@ -136,6 +135,7 @@ public class MenuServiceTest {
      */
 
     public void mainMenuIndicatesGuestWithFalseArgument() {
+        systemInMock.provideLines("3","Y");
         menuService.mainMenuPrompt(false);
         assertThat(systemOutRule.getLog(),containsString("Guest"));
     }
@@ -145,6 +145,7 @@ public class MenuServiceTest {
       mainMenu prompt indicates Admin user when provided true argument
      */
     public void mainMenuIndicatesAdminWithTrueArgument(){
+        systemInMock.provideLines("6","Y");
         menuService.mainMenuPrompt(true);
         assertThat(systemOutRule.getLog(),containsString("Admin"));
     }
@@ -154,6 +155,7 @@ public class MenuServiceTest {
       mainMenu prompt should include List animals when provided false
      */
     public void mainMenuPromptAlwaysIncludesListAnimals() {
+        systemInMock.provideLines("3","Y");
         menuService.mainMenuPrompt(false);
         assertThat(systemOutRule.getLog(),containsString("List Animals"));
     }
@@ -163,6 +165,7 @@ public class MenuServiceTest {
       mainMenu prompt should not include Delete Animal when provided false
      */
     public void mainMenuPromptDoesNotIncludeDeleteAnimalWhenProivdedFalse() {
+        systemInMock.provideLines("3","Y");
         menuService.mainMenuPrompt(false);
         assertThat(systemOutRule.getLog(),not(containsString("Delete Animal")));
     }
@@ -172,6 +175,7 @@ public class MenuServiceTest {
       mainMenuPrompt should include List Animals when provided True
      */
     public void mainMethodPromptIncludesListAnimalsWhenProvidedTrue(){
+        systemInMock.provideLines("6","Y");
         menuService.mainMenuPrompt(true);
         assertThat(systemOutRule.getLog(),containsString("List Animals"));
     }
@@ -181,6 +185,7 @@ public class MenuServiceTest {
       mainMenPrompt should include Delete Animal when provided True
      */
     public void mainMenuPromptIncludesDeleteAnimalWhenProvidedTrue(){
+        systemInMock.provideLines("6","Y");
         menuService.mainMenuPrompt(true);
         assertThat(systemOutRule.getLog(),containsString("Delete Animal"));
     }
@@ -504,6 +509,8 @@ public class MenuServiceTest {
         menuService.quit();
         assertThat(systemOutRule.getLog(),containsString("Returning to main menu"));
     }
+
+
 
 
 
