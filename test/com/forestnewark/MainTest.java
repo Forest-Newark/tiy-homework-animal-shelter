@@ -91,4 +91,31 @@ public class MainTest {
 
     }
 
+
+
+    @Test
+    /*
+    Enter as admin, edit current animal information, exit the program
+     */
+    public void adminLoginEditAnimal() throws IOException {
+        exit.expectSystemExit();
+        String[] args = null;
+        systemInMock.provideLines(
+                "2",
+                "admin","admin",
+                "4","Amber",
+                "Amber","Dog","Doberman","Super Sweet",
+                "2","Amber",
+                "6","y"
+
+        );
+        Main.main(args);
+        assertThat(systemOutRule.getLog(),allOf(
+                containsString("Golden Retriever"),
+                containsString("Doberman")
+
+        ));
+
+    }
+
 }
