@@ -13,9 +13,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeMap;
+
 
 /**
  * Created by Forest Newark on 3/28/17 using TDD. MenuService prints menus for the user, validates input, and returns results
@@ -26,7 +25,7 @@ public class MenuService {
     //Initialize scanner with new line as a delimiter
     private Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
-    //Prints Welcome Prompt with ASCII
+    //Prints Welcome Prompt with ASCII and calls loginPrompt()
     public boolean welcomePrompt() {
 
         System.out.println();
@@ -45,7 +44,7 @@ public class MenuService {
 
 
 
-    //Prints login Prompt (Guest/Admin) Login
+    //Prints login Prompt (Guest/Admin) Login and returns a boolean to indicate login state
 
     public boolean loginPrompt() {
         System.out.println("Please Select a Login Option below");
@@ -88,7 +87,7 @@ public class MenuService {
     }
 
 
-    //Prints main menu prompts, filters based on admin/guest login
+    //Prints main menu prompts, filters selection options based on admin/guest login
 
     public int mainMenuPrompt(boolean admin) {
         // String user = admin ? "Admin" : "Guest";
@@ -201,23 +200,24 @@ public class MenuService {
 
     //Prompts user to create new animal
     //TODO: Control for empty values
-    public Animal createAnimal(ArrayList<Animal> animalArrayList) {
+    public void createAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Create Animal --");
 
-        String name = promptToString("Enter animal name(Required): ", null, true);
+        String name = promptToString("Animal Name [Required]: ", null, true);
 
-        String species = promptToString("Enter animal species(Required): ", null, true);
+        String species = promptToString("Animal Species [Required]: ", null, true);
 
-        String breed = promptToString("Enter animal breed(Optional): ", null, false);
+        String breed = promptToString("Animal Breed [Optional]: ", null, false);
 
-        String description = promptToString("Enter animal description(Optional): ", null, false);
+        String description = promptToString("Animal Description [Optional]: ", null, false);
         System.out.println("You Created the following animal!");
         Animal animal = new Animal(name,species,breed,description, animalArrayList.size()+1);
 
         ArrayList<Animal> animalPrintArray = new ArrayList<>();
         animalPrintArray.add(animal);
         System.out.println(tableBuilder(animalPrintArray,false));
-        return animal;
+
+        animalArrayList.add(animal);
     }
 
     //Allows user to edit Animal

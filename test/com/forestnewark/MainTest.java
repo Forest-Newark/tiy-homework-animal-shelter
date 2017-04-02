@@ -39,42 +39,56 @@ public class MainTest {
     public void guestLoginAndExit() throws IOException {
         exit.expectSystemExit();
     String[] args = null;
-    systemInMock.provideLines("1","3","Y");
-    assertThat(systemOutRule.getLog(),allOf(
-            containsString("Guest"),
-            containsString("Are you sure you want to quit? "),
-            containsString("Goodbye")));
+    systemInMock.provideLines("1","3","y");
     Main.main(args);
 
     }
 
 
-
     @Test
     /*
-    Enter as admin and check for animal that does not exist, creates the animal
+    Enter as admin and check for animal that does not exist, creates the animal,
      */
     public void adminLoginAnimalSearchAnimalAdd() throws IOException {
-
+        exit.expectSystemExit();
         String[] args = null;
         systemInMock.provideLines(
                 "2",
                 "admin","admin",
-                "2","Timothy",
-                 "3","Timothy","Bear","Polar","Super Cool",
-                "2");
+                "2","Timothy","q",
+                "3","Timothy","Bear","Polar","Super Cool",
+                "6","y");
         Main.main(args);
-        assertThat(systemOutRule.getLog(),allOf(
-                containsString("Timothy"),
-                containsString("Bear"),
-                containsString("Polar"),
-                containsString("Super Cool")
-                )
-        );
+        assertThat(systemOutRule.getLog(),allOf(containsString("You Created the following animal!"),
+                containsString("No animal matched search criteria")
+        ));
 
     }
 
 
+    @Test
+    /*
+    Enter as admin, check that an animal exist, delete that animal and and exit
+     */
+    public void adminLoginAnimalDelete() throws IOException {
+        exit.expectSystemExit();
+        String[] args = null;
+        systemInMock.provideLines(
+                "2",
+                "admin","admin",
+                "2","Sasha",
+                "5","Sasha","y",
+                "2","Sasha","q",
+                "6","y"
 
+        );
+        Main.main(args);
+        assertThat(systemOutRule.getLog(),allOf(
+                containsString("Tabby"),
+                containsString("Are you sure you want to delete Sasha"),
+                containsString("No animal matched search criteria")
+        ));
+
+    }
 
 }

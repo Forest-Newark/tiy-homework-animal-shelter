@@ -378,7 +378,7 @@ public class MenuServiceTest {
      */
     public void animalSearchReturnsIndexForUniqueMatch(){
         systemInMock.provideLines("Lily");
-        assertThat(menuService.animalSearch(animalTestArray),equalTo(6));
+        assertThat(menuService.animalSearch(animalTestArray),equalTo(5));
     }
 
     @Test
@@ -486,6 +486,7 @@ public class MenuServiceTest {
     deleteAnimal displays correct Menu Label
      */
     public void deleteAnimalDisplaysMenuLabel(){
+        systemInMock.provideLines("q");
         menuService.deleteAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("-- Delete Animal --"));
 
