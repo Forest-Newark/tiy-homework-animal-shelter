@@ -13,20 +13,24 @@ public class Animal {
     private String breed;
     private String description;
     private LocalDate dateAdded;
+    private int uniqueId;
 
     /**
      * @param name sets the name of the animal
      * @param species sets the species for the animal
      * @param breed sets the breed for the animal
      * @param description sets the description for the animal
+     * @param uniqueId
      */
-    public Animal(String name, String species, String breed, String description) {
+    public Animal(String name, String species, String breed, String description, int uniqueId) {
 
         this.name = name;
         this.species = species;
         this.breed = breed;
         this.description = description;
+        this.uniqueId = uniqueId;
         this.dateAdded = LocalDate.now();
+
     }
 
     /**
@@ -103,5 +107,9 @@ public class Animal {
      */
     public LocalDate getDateAdded() {
         return dateAdded;
+    }
+
+    public int getUniqueId() {
+        return uniqueId;
     }
 }

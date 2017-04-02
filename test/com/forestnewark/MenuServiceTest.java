@@ -35,12 +35,12 @@ public class MenuServiceTest {
         //Arraylist of Animals
         emptyTestArray = new ArrayList<>();
         animalTestArray = new ArrayList<>();
-        animalTestArray.add(new Animal("Melody","Dog","Border Collie","Jumps a lot"));
-        animalTestArray.add(new Animal("Amber","Dog","Golden Retriever","Super Sweet!"));
-        animalTestArray.add(new Animal("Melody","Fish","Gold Fish","Swims a lot"));
-        animalTestArray.add(new Animal("Sasha","Cat","Tabby","Sleeps a lot"));
-        animalTestArray.add(new Animal("Frank","Turtle","",""));
-        animalTestArray.add(new Animal("Lily","Horse","",""));
+        animalTestArray.add(new Animal("Melody","Dog","Border Collie","Jumps a lot", 1));
+        animalTestArray.add(new Animal("Amber","Dog","Golden Retriever","Super Sweet!", 2));
+        animalTestArray.add(new Animal("Melody","Fish","Gold Fish","Swims a lot", 3));
+        animalTestArray.add(new Animal("Sasha","Cat","Tabby","Sleeps a lot", 4));
+        animalTestArray.add(new Animal("Frank","Turtle","","", 5));
+        animalTestArray.add(new Animal("Lily","Horse","","", 6));
     }
 
     //Create rule to enable log
@@ -107,6 +107,37 @@ public class MenuServiceTest {
 
     }
 
+    @Test
+    /*
+    login prompt validates input - non-valid integer
+     */
+    public void loginPromptValidatesInputNonValidInteger() {
+        systemInMock.provideLines("4","1");
+        menuService.loginPrompt();
+        assertThat(systemOutRule.getLog(),containsString("Not a valid option"));
+    }
+
+    @Test
+    /*
+    login prompt validates input - double
+     */
+    public void loginPromptValidatesInputDouble() {
+        systemInMock.provideLines("2.1","1");
+        menuService.loginPrompt();
+        assertThat(systemOutRule.getLog(),containsString("Not a valid option"));
+    }
+
+    @Test
+    /*
+    login prompt validates input - string
+     */
+    public void loginPromptValidatesInputString() {
+        systemInMock.provideLines("cheeseburger","1");
+        menuService.loginPrompt();
+        assertThat(systemOutRule.getLog(),containsString("Not a valid option"));
+    }
+
+
 
     //Login Validator test
 
@@ -125,6 +156,7 @@ public class MenuServiceTest {
     public void loginValidatorReturnsZeroForNonAdmin(){
         assertThat(menuService.loginValidator("Forest","Newark"),equalTo(false));
     }
+
 
 
     //Main Menu Prompt test
@@ -346,7 +378,7 @@ public class MenuServiceTest {
      */
     public void animalSearchReturnsIndexForUniqueMatch(){
         systemInMock.provideLines("Lily");
-        assertThat(menuService.animalSearch(animalTestArray),equalTo(5));
+        assertThat(menuService.animalSearch(animalTestArray),equalTo(6));
     }
 
     @Test
@@ -366,12 +398,12 @@ public class MenuServiceTest {
       animalDetail displays correct Menu Label
      */
     public void animalDetailDisplaysMenuLabel(){
-        menuService.animalDetail();
+        systemInMock.provideLines("q");
+        menuService.animalDetail(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("-- Animal Detail --"));
 
 
     }
-
 
     //Create Animal Test
     @Test
@@ -380,7 +412,7 @@ public class MenuServiceTest {
      */
     public void createAnimalDisplaysMenuLabel(){
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("-- Create Animal --"));
 
     }
@@ -391,7 +423,7 @@ public class MenuServiceTest {
      */
     public void createAnimalPromptsForAnimalName() {
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("Animal Name [Required]"));
 
     }
@@ -402,7 +434,7 @@ public class MenuServiceTest {
      */
     public void createAnimalPromptsForAnimalSpecies() {
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("Animal Species [Required]"));
     }
 
@@ -412,7 +444,7 @@ public class MenuServiceTest {
      */
     public void createAnimalPromptsForAnimalBreed() {
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("Animal Breed [Optional]"));
     }
 
@@ -422,7 +454,7 @@ public class MenuServiceTest {
      */
     public void createAnimalPromptsForAnimalDescription() {
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("Animal Description [Optional]"));
     }
 
@@ -432,11 +464,9 @@ public class MenuServiceTest {
      */
     public void createAnimalReturnsAnAnimal() {
         systemInMock.provideLines("Freddy","Dog","Setter","Sweet!");
-        menuService.createAnimal();
+        menuService.createAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("Freddy"));
     }
-
-
 
     //Edit Animal Test
     @Test
@@ -444,12 +474,11 @@ public class MenuServiceTest {
     editAnimal displays correct Menu Label
      */
     public void editAnimalDisplaysMenuLabel(){
-        menuService.editAnimal();
+        systemInMock.provideLines("q");
+        menuService.editAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("-- Edit Animal --"));
 
     }
-
-
 
     //Delete Animal Test
     @Test
@@ -457,7 +486,7 @@ public class MenuServiceTest {
     deleteAnimal displays correct Menu Label
      */
     public void deleteAnimalDisplaysMenuLabel(){
-        menuService.deleteAnimal();
+        menuService.deleteAnimal(animalTestArray);
         assertThat(systemOutRule.getLog(),containsString("-- Delete Animal --"));
 
     }
@@ -509,15 +538,6 @@ public class MenuServiceTest {
         menuService.quit();
         assertThat(systemOutRule.getLog(),containsString("Returning to main menu"));
     }
-
-
-
-
-
-
-
-
-
 
 
 }

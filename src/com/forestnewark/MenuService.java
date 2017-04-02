@@ -23,6 +23,9 @@ import java.util.TreeMap;
  */
 public class MenuService {
 
+    //Initialize scanner with new line as a delimiter
+    private Scanner scanner = new Scanner(System.in).useDelimiter("\n");
+
     //Prints Welcome Prompt with ASCII
     public boolean welcomePrompt() {
 
@@ -48,22 +51,26 @@ public class MenuService {
         System.out.println("Please Select a Login Option below");
         System.out.println("1 - Guest Login");
         System.out.println("2 - Admin Login");
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
         System.out.print("Choice: ");
         String choice = scanner.next();
 
-        if (Integer.parseInt(choice) == 1) {
-            return false;
-        } else if (Integer.parseInt(choice) == 2) {
+        try {
+            int loginInt = Integer.parseInt(choice);
+            if(loginInt == 1) {
+                return false;
+            } else if (loginInt == 2) {
+                System.out.println("Username: ");
 
-            System.out.println("Username: ");
+                String username = scanner.next();
 
-            String username = scanner.next();
-
-            System.out.println("Password: ");
-            String password = scanner.next();
-            return loginValidator(username, password);
-        } else {
+                System.out.println("Password: ");
+                String password = scanner.next();
+                return loginValidator(username, password);
+            }else {
+                System.out.println("Not a valid option");
+                return loginPrompt();
+            }
+        }catch (Exception e){
             System.out.println("Not a valid option");
             return loginPrompt();
         }
@@ -109,7 +116,6 @@ public class MenuService {
 
     public int userSelectionPrompt(boolean admin) {
         System.out.println("Please choose an option: ");
-        Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
         String input = scanner.next();
         try {
@@ -137,40 +143,31 @@ public class MenuService {
     //Prints out animals with provided arraylist, uses tableBuilder as helper method
     public void listAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal List -- \n");
-        Animal[] listArray = new Animal[animalArrayList.size()];
-        for (int x = 0;x < animalArrayList.size();x++) {
-            listArray[x] = animalArrayList.get(x);
-        }
-
-        System.out.println(tableBuilder(listArray,true));
+        System.out.println(tableBuilder(animalArrayList,true));
 
     }
 
     //Prints out a formatted table from animal Array
 
-    private RenderedTable tableBuilder(Animal[] animalList,boolean partial) {
-
+    private RenderedTable tableBuilder(ArrayList<Animal> printArray,boolean partial) {
 
         V2_AsciiTable at = new V2_AsciiTable();
         at.addRule();
-        int index = 1;
         if (partial){
             at.addRow("ID", "NAME", "SPECIES", "DAYS IN SHELTER");
             at.addRule();
 
-            for (int x = 0;x < animalList.length;x++) {
-                at.addRow(index, animalList[x].getName(), animalList[x].getSpecies(), ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+            for (Animal animal : printArray) {
+                at.addRow(animal.getUniqueId(), animal.getName(), animal.getSpecies(), ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
                 at.addRule();
-                index++;
             }
         }
         if (!partial){
             at.addRow("ID","NAME", "SPECIES", "Breed", "Description", "Date Added", "Days In Shelter");
             at.addRule();
-            for (int x = 0;x < animalList.length;x++) {
-                at.addRow(index, animalList[x].getName(),animalList[x].getSpecies(),animalList[x].getBreed(),animalList[x].getDescription(),animalList[x].getDateAdded(),ChronoUnit.DAYS.between(animalList[x].getDateAdded(), LocalDate.now()));
+            for (Animal animal : printArray) {
+                at.addRow(animal.getUniqueId(), animal.getName(),animal.getSpecies(),animal.getBreed(),animal.getDescription(),animal.getDateAdded(),ChronoUnit.DAYS.between(animal.getDateAdded(), LocalDate.now()));
                 at.addRule();
-                index++;
             }
 
         }
@@ -180,52 +177,144 @@ public class MenuService {
         rend.setTheme(V2_E_TableThemes.UTF_LIGHT.get());
         rend.setWidth(new WidthAbsoluteEven(76));
 
-        RenderedTable rt = rend.render(at);
-        return rt;
+        return rend.render(at);
+
     }
 
 
     //Prints out specific information on animal
     //TODO: FIX THIS SHIT!
-    public void animalDetail() {
+    public void animalDetail(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal Detail --");
+
+        int index = animalSearch(animalArrayList);
+
+        if(index != -1){
+            ArrayList<Animal> animalPrintArray = new ArrayList<>();
+            animalPrintArray.add(animalArrayList.get(index));
+            System.out.println(tableBuilder(animalPrintArray,false));
+
+        }
     }
 
 
 
     //Prompts user to create new animal
     //TODO: Control for empty values
-    public Animal createAnimal() {
-        Scanner scanner = new Scanner(System.in);
+    public Animal createAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Create Animal --");
-        System.out.println("Animal Name [Required]: ");
-        String name = scanner.next();
-        System.out.println("Animal Species [Required]: ");
-        String species = scanner.next();
-        System.out.println("Animal Breed [Optional]: ");
-        String breed = scanner.next();
-        System.out.println("Animal Description [Optional]:");
-        String description = scanner.next();
+
+        String name = promptToString("Enter animal name(Required): ", null, true);
+
+        String species = promptToString("Enter animal species(Required): ", null, true);
+
+        String breed = promptToString("Enter animal breed(Optional): ", null, false);
+
+        String description = promptToString("Enter animal description(Optional): ", null, false);
         System.out.println("You Created the following animal!");
-        Animal animal = new Animal(name,species,breed,description);
-        Animal[] animalArray = {animal};
-        System.out.println(tableBuilder(animalArray,false));
+        Animal animal = new Animal(name,species,breed,description, animalArrayList.size()+1);
+
+        ArrayList<Animal> animalPrintArray = new ArrayList<>();
+        animalPrintArray.add(animal);
+        System.out.println(tableBuilder(animalPrintArray,false));
         return animal;
     }
 
     //Allows user to edit Animal
     //TODO: Write this method
-    public void editAnimal() {
-        System.out.println("-- Edit Animal --");
+    public void editAnimal(ArrayList<Animal> animalArrayList) {
+
+        System.out.println("-- Edit Animal -- ");
+
+        int index = animalSearch(animalArrayList);
+
+        if (index != -1) {
+            Animal animal = animalArrayList.get(index);
+
+            ArrayList<Animal> animalPrintArray = new ArrayList<>();
+            animalPrintArray.add(animalArrayList.get(index));
+            System.out.println(tableBuilder(animalPrintArray,false));
+
+
+            System.out.println("Change information or hit return to keep information");
+
+            animal.setName(promptToString("Name [" + animal.getName() + "] : ", animal.getName(), true));
+
+            animal.setSpecies(promptToString("Species [" + animal.getSpecies() + "] : ", animal.getSpecies(), true));
+
+            animal.setBreed(promptToString("Breed [" + animal.getBreed() + "] : ", animal.getBreed(), false));
+
+            animal.setDescription(promptToString("Description [" + animal.getDescription() + "] : ", animal.getDescription(), false));
+
+            System.out.printf("\nUpdated Animal Information:\n" +
+                    "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
+
+        }
+
+
+
+    }
+
+    private String promptToString(String prompt, String startValue, boolean required) {
+
+        System.out.print(prompt);
+        String response = scanner.next();
+
+        if (startValue == null) {
+            if (response.equals("") && required) {
+
+                return promptToString(prompt, startValue, required);
+
+            } else {
+
+                return response;
+            }
+        } else {
+            if (response.equals("")) {
+                return startValue;
+
+            } else {
+                return response;
+            }
+
+        }
+
     }
 
 
     //Allows user to delete an animal
-    //TODO: Write this method
-    public int deleteAnimal() {
-        System.out.println("-- Delete Animal --");
 
-        return 0;
+    public void deleteAnimal(ArrayList<Animal> animalArrayList) {
+        System.out.println("-- Delete Animal --");
+        int index = animalSearch(animalArrayList);
+
+        if (index != -1) {
+            Animal animal = animalArrayList.get(index);
+            ArrayList<Animal> animalPrintArray = new ArrayList<>();
+            animalPrintArray.add(animalArrayList.get(index));
+            System.out.println(tableBuilder(animalPrintArray,false));
+
+            System.out.printf("Are you sure you want to delete %s? (Y/N)",animal.getName());
+            String response = scanner.next();
+            try {
+                int badResponse =Integer.parseInt(response);
+                System.out.printf("'%s' is not a valid response",badResponse);
+                deleteAnimal(animalArrayList);
+
+            }catch (Exception e) {
+                if(response.toLowerCase().equals("y")){
+                    System.out.printf("'%s' was deleted!\n",animal.getName());
+                    animalArrayList.remove(index);
+                }else if (response.toLowerCase().equals("n")) {
+                    System.out.println("Returning to Main Menu ");
+                }else {
+                    System.out.printf("'%s' was not a valid response",response);
+                    deleteAnimal(animalArrayList);
+                }
+            }
+
+        }
+
     }
 
     //Quits the program with user verification
@@ -242,12 +331,11 @@ public class MenuService {
     }
 
 
-    //Search for animals
-    //TODO: Fix Print of of Animals to formatted table
 
     public int animalSearch(ArrayList<Animal> animalArrayList) {
         if (animalArrayList.size() == 0) {
             System.out.println("The Shelter is currently EMPTY! Please check back soon!");
+            return -1;
         } else {
             System.out.println("Enter valid Id or a keyword to search for animal(s) [q to quit]: ");
             Scanner scanner = new Scanner(System.in);
@@ -256,12 +344,16 @@ public class MenuService {
 
             //Check for int and search for animal based of ID number
             try {
-                int indexSearch = Integer.parseInt(search);
-                if (indexSearch < 1 || indexSearch > animalArrayList.size()) {
+                int uniqueIndexSearch = Integer.parseInt(search);
+                if (uniqueIndexSearch < 1 || uniqueIndexSearch > animalArrayList.size()) {
                     System.out.println("This is not a valid index");
                     return animalSearch(animalArrayList);
                 } else {
-                    return indexSearch - 1;
+                    for(Animal animal : animalArrayList) {
+                        if (animal.getUniqueId() == uniqueIndexSearch) {
+                            return animalArrayList.indexOf(animal);
+                        }
+                    }
                 }
             }
             //catch handles any non integer search queries
@@ -274,44 +366,30 @@ public class MenuService {
                     return animalSearch(animalArrayList);
                 }
 
-                Map<Integer, Animal> animalResult = new TreeMap<>();
-                int index = 0;
+                ArrayList<Animal> animalPrintArray = new ArrayList<>();
                 for (Animal animal : animalArrayList) {
                     if (animal.getName().toLowerCase().contains(search) || animal.getSpecies().toLowerCase().contains(search) || animal.getBreed().toLowerCase().contains(search) || animal.getDescription().toLowerCase().contains(search)) {
-
-                        animalResult.put(index, animal);
+                        animalPrintArray.add(animal);
                     }
-                    index++;
                 }
                 //Return results based on Hashmap size
-                if (animalResult.size() == 0) {
+                if (animalPrintArray.size() == 0) {
                     System.out.println("No animal matched search criteria");
                     return animalSearch(animalArrayList);
-                } else if (animalResult.size() == 1) {
-                    return index - 1;
+                } else if (animalPrintArray.size() == 1) {
+                    return animalArrayList.indexOf(animalPrintArray.get(0));
                 } else {
                     System.out.println("The following animals matched your search:");
 
-                    System.out.println("-- Search Results --");
-                    //for (Animal animal : animalResult.keySet()) {
-                    for (Map.Entry<Integer, Animal> entry : animalResult.entrySet()) {
-                        System.out.print("ID #");
-                        System.out.print(entry.getKey() + 1);
-                        //System.out.print(animalResult.get(animal) + 1);
-                        System.out.print("  ");
-                        System.out.print("Name: ");
-                        System.out.print(String.format("%-10s", entry.getValue().getName()));
-                        System.out.print("  ");
-                        System.out.print("Species: ");
-                        System.out.print(String.format("%-10s", entry.getValue().getSpecies()));
-                        System.out.println();
-                    }
+                    System.out.println(tableBuilder(animalPrintArray,true));
+
                     return animalSearch(animalArrayList);
                 }
 
             }
 
         }
+
         return 0;
     }
 
