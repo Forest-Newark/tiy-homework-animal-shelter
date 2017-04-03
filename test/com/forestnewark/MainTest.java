@@ -13,6 +13,7 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AllOf.allOf;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.contrib.java.lang.system.TextFromStandardInputStream.emptyStandardInputStream;
 
 /**
@@ -32,6 +33,16 @@ public class MainTest {
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
 
+
+    @Test
+    /*
+    ensure that the main method is created correctly (IE not null)
+     */
+    public void test(){
+
+        Main main = new Main();
+        assertThat(main, notNullValue());
+    }
     @Test
     /*
     Enter as guest and exit the program

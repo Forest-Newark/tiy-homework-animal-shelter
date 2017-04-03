@@ -20,7 +20,7 @@ public class Animal {
      * @param species sets the species for the animal
      * @param breed sets the breed for the animal
      * @param description sets the description for the animal
-     * @param uniqueId
+     * @param uniqueId is a unique identification number for the animal
      */
     public Animal(String name, String species, String breed, String description, int uniqueId) {
 

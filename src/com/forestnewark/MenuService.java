@@ -1,7 +1,9 @@
 package com.forestnewark;
 
-
+//ASCII Banner Printer
 import com.github.lalyos.jfiglet.FigletFont;
+
+//ASCII Table Generator
 import de.vandermeer.asciitable.v2.RenderedTable;
 import de.vandermeer.asciitable.v2.V2_AsciiTable;
 import de.vandermeer.asciitable.v2.render.V2_AsciiTableRenderer;
@@ -25,11 +27,16 @@ public class MenuService {
     //Initialize scanner with new line as a delimiter
     private Scanner scanner = new Scanner(System.in).useDelimiter("\n");
 
-    //Prints Welcome Prompt with ASCII and calls loginPrompt()
+    /**
+     * Prints Welcome Prompt with ASCII and calls loginPrompt()
+     * @return boolean which indicates the login status of the user (Guest or Admin)
+     */
+
     public boolean welcomePrompt() {
 
         System.out.println();
-        String asciiArt1 = null;
+
+        String asciiArt1;
         try {
             asciiArt1 = FigletFont.convertOneLine("Animal Shelter");
             System.out.println(asciiArt1);
@@ -42,10 +49,10 @@ public class MenuService {
     }
 
 
-
-
-    //Prints login Prompt (Guest/Admin) Login and returns a boolean to indicate login state
-
+    /**
+     * Prints login Prompt
+     * @return boolean that indicates the login status of the user (Guest or Admin)
+     */
     public boolean loginPrompt() {
         System.out.println("Please Select a Login Option below");
         System.out.println("1 - Guest Login");
@@ -77,6 +84,12 @@ public class MenuService {
     }
 
 
+    /**
+     * Validates the admin login username and password
+     * @param username given by the user
+     * @param password given by the user
+     * @return boolean that indicates if the username and password combination were correct
+     */
     //Validates Admin login, currently only accepts username: admin & password: admin
 
     public boolean loginValidator(String username, String password) {
@@ -86,32 +99,44 @@ public class MenuService {
         return false;
     }
 
-
-    //Prints main menu prompts, filters selection options based on admin/guest login
-
+    /**
+     * Prints main menu prompts, filters selection options based on admin/guest login
+     * @param admin indicates the state of the menu to be printed, either full menu (admin) or partial menu (Guest)
+     * @return int value that is used the main class to control program flow
+     */
     public int mainMenuPrompt(boolean admin) {
-        // String user = admin ? "Admin" : "Guest";
+
         StringBuilder sb = new StringBuilder();
+
         sb.append("-- Main Menu --\n");
+
         sb.append(String.format("%5s", "["));
         sb.append(admin ? "Admin" : "Guest");
         sb.append("]\n");
+
         sb.append("1) List Animals\n");
         sb.append("2) View Animal Details\n");
+
         if (admin) {
             sb.append("3) Create Animal\n");
             sb.append("4) Edit Animal\n");
             sb.append("5) Delete Animal\n");
         }
+
         sb.append(admin ? "6) Quit" : "3) Quit");
+
         System.out.println(sb.toString());
+
         return userSelectionPrompt(admin);
 
     }
 
 
-
-    // Returns int value based on user selection, contorls for admin/guest menu
+    /**
+     * Returns int value based on user selection which is used by the mainMenuPrompt()
+     * @param admin indicates the state of the menu which allows for the correct selection to be returned
+     * @return the correct selection value that is used to control the flow of the program
+     */
 
     public int userSelectionPrompt(boolean admin) {
         System.out.println("Please choose an option: ");
@@ -119,18 +144,24 @@ public class MenuService {
         String input = scanner.next();
         try {
             int selection = Integer.parseInt(input);
+
             if (selection < 1 || (selection > 6 && admin) || (selection > 3 && !admin)) {
                 System.out.println("\'" + selection + "\' is not a valid selection.");
                 return userSelectionPrompt(admin);
+
             } else if (!admin) {
+
                 if (selection == 3) {
                     return 6;
+
                 } else {
                     return selection;
                 }
+
             } else {
                 return selection;
             }
+
         } catch (Exception e) {
             System.out.println("\'" + input + "\' is not a valid selection.");
             return userSelectionPrompt(admin);
@@ -138,16 +169,24 @@ public class MenuService {
 
     }
 
-
-    //Prints out animals with provided arraylist, uses tableBuilder as helper method
+    /**
+     * Prints out animals currently in the program.
+     * Uses tablebuilder as helper method
+     * @param animalArrayList to be printed
+     */
     public void listAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal List -- \n");
+
         System.out.println(tableBuilder(animalArrayList,true));
 
     }
 
-    //Prints out a formatted table from animal Array
-
+    /**
+     * Prints out a formatted table
+     * @param printArray is the list of animals to be printed
+     * @param partial indicates the amount of information to be printed about each animal
+     * @return RenderedTable to be printed
+     */
     private RenderedTable tableBuilder(ArrayList<Animal> printArray,boolean partial) {
 
         V2_AsciiTable at = new V2_AsciiTable();
@@ -180,9 +219,11 @@ public class MenuService {
 
     }
 
-
-    //Prints out specific information on animal
-    //TODO: FIX THIS SHIT!
+    /**
+     * Prints out specific information on a single animal.
+     * Uses tabelBuilder as a helper method
+     * @param animalArrayList
+     */
     public void animalDetail(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal Detail --");
 
@@ -190,16 +231,21 @@ public class MenuService {
 
         if(index != -1){
             ArrayList<Animal> animalPrintArray = new ArrayList<>();
+
             animalPrintArray.add(animalArrayList.get(index));
+
             System.out.println(tableBuilder(animalPrintArray,false));
 
         }
     }
 
 
+    /**
+     * Prompts user to create new animal
+     * @param animalArrayList
+     */
 
-    //Prompts user to create new animal
-    //TODO: Control for empty values
+
     public void createAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Create Animal --");
 
@@ -220,8 +266,12 @@ public class MenuService {
         animalArrayList.add(animal);
     }
 
+    /**
+     * Prompts user edit the details of a specific animal
+     * @param animalArrayList
+     */
     //Allows user to edit Animal
-    //TODO: Write this method
+
     public void editAnimal(ArrayList<Animal> animalArrayList) {
 
         System.out.println("-- Edit Animal -- ");
@@ -246,15 +296,19 @@ public class MenuService {
 
             animal.setDescription(promptToString("Description [" + animal.getDescription() + "] : ", animal.getDescription(), false));
 
-            System.out.printf("\nUpdated Animal Information:\n" +
-                    "Name: %s\nSpecies: %s\nBreed: %s\nDescription: %s", animal.getName(), animal.getSpecies(), animal.getBreed(), animal.getDescription());
+            System.out.println(tableBuilder(animalPrintArray,false));
 
         }
 
-
-
     }
 
+    /**
+     * Prints specific prompts to the console and validates input
+     * @param prompt to be printed the console
+     * @param startValue of the value to be edited
+     * @param required determines if this value is required
+     * @return the users response
+     */
     private String promptToString(String prompt, String startValue, boolean required) {
 
         System.out.print(prompt);
@@ -281,8 +335,10 @@ public class MenuService {
 
     }
 
-
-    //Allows user to delete an animal
+    /**
+     * Prompts user to delete an animal
+     * @param animalArrayList
+     */
 
     public void deleteAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Delete Animal --");
@@ -290,25 +346,36 @@ public class MenuService {
 
         if (index != -1) {
             Animal animal = animalArrayList.get(index);
+
             ArrayList<Animal> animalPrintArray = new ArrayList<>();
+
             animalPrintArray.add(animalArrayList.get(index));
+
             System.out.println(tableBuilder(animalPrintArray,false));
 
             System.out.printf("Are you sure you want to delete %s? (Y/N)",animal.getName());
+
             String response = scanner.next();
             try {
                 int badResponse =Integer.parseInt(response);
-                System.out.printf("'%s' is not a valid response",badResponse);
+
+                System.out.printf("'%s' is not a valid response\n",badResponse);
+
                 deleteAnimal(animalArrayList);
 
             }catch (Exception e) {
                 if(response.toLowerCase().equals("y")){
+
                     System.out.printf("'%s' was deleted!\n",animal.getName());
+
                     animalArrayList.remove(index);
                 }else if (response.toLowerCase().equals("n")) {
+
                     System.out.println("Returning to Main Menu ");
                 }else {
+
                     System.out.printf("'%s' was not a valid response",response);
+
                     deleteAnimal(animalArrayList);
                 }
             }
@@ -317,7 +384,10 @@ public class MenuService {
 
     }
 
-    //Quits the program with user verification
+    /**
+     * Prompts user to quit the program with verification
+     */
+
     public void quit() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("-- Quit --");
@@ -331,54 +401,78 @@ public class MenuService {
     }
 
 
+    /**
+     * search method which returns the int of search for animals
+     * @param animalArrayList to be searched
+     * @return the index of the animal. Returns -1 if no animal is found that matches search
+     */
 
     public int animalSearch(ArrayList<Animal> animalArrayList) {
         if (animalArrayList.size() == 0) {
+
             System.out.println("The Shelter is currently EMPTY! Please check back soon!");
+
             return -1;
         } else {
+
             System.out.println("Enter valid Id or a keyword to search for animal(s) [q to quit]: ");
+
             Scanner scanner = new Scanner(System.in);
-            //Get the search value as a string
+
             String search = scanner.next().toLowerCase();
 
-            //Check for int and search for animal based of ID number
+
             try {
                 int uniqueIndexSearch = Integer.parseInt(search);
+
                 if (uniqueIndexSearch < 1 || uniqueIndexSearch > animalArrayList.size()) {
+
                     System.out.println("This is not a valid index");
+
                     return animalSearch(animalArrayList);
                 } else {
+
                     for(Animal animal : animalArrayList) {
+
                         if (animal.getUniqueId() == uniqueIndexSearch) {
+
                             return animalArrayList.indexOf(animal);
                         }
                     }
                 }
             }
-            //catch handles any non integer search queries
+
             catch (Exception e) {
+
                 if (search.equals("q")) {
                     return -1;
                 }
                 if (search.equals("")) {
+
                     System.out.println("It seems that you have entered an empty search...\n");
+
                     return animalSearch(animalArrayList);
                 }
 
                 ArrayList<Animal> animalPrintArray = new ArrayList<>();
                 for (Animal animal : animalArrayList) {
+
                     if (animal.getName().toLowerCase().contains(search) || animal.getSpecies().toLowerCase().contains(search) || animal.getBreed().toLowerCase().contains(search) || animal.getDescription().toLowerCase().contains(search)) {
+
                         animalPrintArray.add(animal);
                     }
                 }
-                //Return results based on Hashmap size
+
                 if (animalPrintArray.size() == 0) {
+
                     System.out.println("No animal matched search criteria");
+
                     return animalSearch(animalArrayList);
                 } else if (animalPrintArray.size() == 1) {
+
                     return animalArrayList.indexOf(animalPrintArray.get(0));
                 } else {
+
                     System.out.println("The following animals matched your search:");
 
                     System.out.println(tableBuilder(animalPrintArray,true));
@@ -390,7 +484,7 @@ public class MenuService {
 
         }
 
-        return 0;
+        return -1;
     }
 
 }
