@@ -25,8 +25,6 @@ public class Main {
         boolean admin = menuService.welcomePrompt();
 
 
-
-
         //While loop runs the program
         while(true){
 

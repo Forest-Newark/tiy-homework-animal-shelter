@@ -8,12 +8,24 @@ import java.util.Properties;
  * Created by forestnewark on 4/3/17.
  */
 public class AnimalRepository {
+
+
     private Connection conn;
 
+    /**
+     * AnimalRespository constructor
+     * @param jdbcUrl to be used to connect to the database
+     * @throws SQLException
+     */
     public AnimalRepository(String jdbcUrl) throws SQLException {
         this.conn = DriverManager.getConnection(jdbcUrl);
     }
 
+    /**
+     * List all animals in the database
+     * @return ArrayList of Animals
+     * @throws SQLException
+     */
     public ArrayList<Animal> listAnimal() throws SQLException {
 
         ArrayList<Animal> animalResultArray = new ArrayList<>();
@@ -35,7 +47,12 @@ public class AnimalRepository {
     }
 
 
-    //View Details
+    /**
+     * Finds details on a specific animal
+     * @param uniqueId to identify specific animal
+     * @return Result
+     * @throws SQLException
+     */
     public ResultSet animalDetail(String uniqueId) throws SQLException {
         // create a prepared statement
         PreparedStatement preparedStatement = conn.prepareStatement("SELECT * " +
@@ -50,7 +67,11 @@ public class AnimalRepository {
     }
 
 
-    //Create Animal
+    /**
+     * Creates a new animal in the database
+     * @param animal to be created in the database
+     * @throws SQLException
+     */
     public void createAnimal(Animal animal) throws SQLException {
         // create a prepared statement
         PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO animal(name, species, breed, description) " +
@@ -66,7 +87,11 @@ public class AnimalRepository {
         preparedStatement.execute();
     }
 
-    //Edit Animal
+    /**
+     * Edit animal that currently exist in the database
+     * @param animal to be edited
+     * @throws SQLException
+     */
     public void editAnimal(Animal animal) throws SQLException {
         PreparedStatement preparedStatement = conn.prepareStatement("UPDATE animal SET " +
                 "name = ?,species = ?, breed = ?, description = ? " +
@@ -85,7 +110,11 @@ public class AnimalRepository {
     }
 
 
-    //Delete Animal
+    /**
+     * Delets animal that currently exist in the database
+     * @param animal to be deleted
+     * @throws SQLException
+     */
     public void deleteAnimal(Animal animal) throws SQLException {
         // create a prepared statement
         PreparedStatement preparedStatement = conn.prepareStatement("DELETE " +
@@ -94,7 +123,6 @@ public class AnimalRepository {
 
 
         // set parameter values
-        //preparedStatement.setString(1,  "'" + String.valueOf(animal.getUniqueId()) + "'");
         preparedStatement.setInt(1,animal.getUniqueId());
 
         // execute the query
@@ -102,11 +130,18 @@ public class AnimalRepository {
     }
 
 
+    /**
+     * Counts the number of animals currently in the database
+     * @return the current number of animals in the database
+     * @throws SQLException
+     */
     public int getAnimalCount() throws SQLException {
         Statement stmt = conn.createStatement();
 
         ResultSet result =  stmt.executeQuery("SELECT COUNT(*) AS total FROM ANIMAL ");
+
         int total = 0;
+
         while(result.next()) {
             total = result.getInt("total");
 

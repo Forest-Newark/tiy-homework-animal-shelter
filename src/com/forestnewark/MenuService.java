@@ -261,7 +261,7 @@ public class MenuService {
 
         System.out.println("You Created the following animal!");
 
-        Animal animal = new Animal(animalArrayList.size()+1,name,species,breed,description);
+        Animal animal = new Animal(animalArrayList.get(animalArrayList.size()-1).getUniqueId()+1,name,species,breed,description);
 
         ArrayList<Animal> animalPrintArray = new ArrayList<>();
         animalPrintArray.add(animal);
