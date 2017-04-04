@@ -35,12 +35,12 @@ public class MenuServiceTest {
         //Arraylist of Animals
         emptyTestArray = new ArrayList<>();
         animalTestArray = new ArrayList<>();
-        animalTestArray.add(new Animal("Melody", "Dog", "Border Collie", "Jumps a lot", 1));
-        animalTestArray.add(new Animal("Amber", "Dog", "Golden Retriever", "Super Sweet!", 2));
-        animalTestArray.add(new Animal("Melody", "Fish", "Gold Fish", "Swims a lot", 3));
-        animalTestArray.add(new Animal("Sasha", "Cat", "Tabby", "Sleeps a lot", 4));
-        animalTestArray.add(new Animal("Frank", "Turtle", "", "", 5));
-        animalTestArray.add(new Animal("Lily", "Horse", "", "", 6));
+        animalTestArray.add(new Animal(1,"Melody", "Dog", "Border Collie", "Jumps a lot"));
+        animalTestArray.add(new Animal(2,"Amber", "Dog", "Golden Retriever", "Super Sweet!"));
+        animalTestArray.add(new Animal(3,"Melody", "Fish", "Gold Fish", "Swims a lot"));
+        animalTestArray.add(new Animal(4,"Sasha", "Cat", "Tabby", "Sleeps a lot"));
+        animalTestArray.add(new Animal(5,"Frank", "Turtle", "", ""));
+        animalTestArray.add(new Animal(6,"Lily", "Horse", "", ""));
     }
 
     //Create rule to enable log

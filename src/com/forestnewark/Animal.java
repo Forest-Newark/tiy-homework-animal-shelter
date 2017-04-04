@@ -22,13 +22,13 @@ public class Animal {
      * @param description sets the description for the animal
      * @param uniqueId is a unique identification number for the animal
      */
-    public Animal(String name, String species, String breed, String description, int uniqueId) {
+    public Animal(int uniqueId, String name, String species, String breed, String description) {
 
+        this.uniqueId = uniqueId;
         this.name = name;
         this.species = species;
         this.breed = breed;
         this.description = description;
-        this.uniqueId = uniqueId;
         this.dateAdded = LocalDate.now();
 
     }

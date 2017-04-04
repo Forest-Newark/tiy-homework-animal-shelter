@@ -227,14 +227,16 @@ public class MenuService {
     public void animalDetail(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Animal Detail --");
 
-        int index = animalSearch(animalArrayList);
+        int uniqueId = animalSearch(animalArrayList);
 
-        if(index != -1){
-            ArrayList<Animal> animalPrintArray = new ArrayList<>();
-
-            animalPrintArray.add(animalArrayList.get(index));
-
-            System.out.println(tableBuilder(animalPrintArray,false));
+        if(uniqueId != -1){
+            ArrayList<Animal> printArray = new ArrayList<>();
+            for(Animal animal : animalArrayList) {
+                if (animal.getUniqueId() == uniqueId) {
+                    printArray.add(animal);
+                }
+            }
+            System.out.println(tableBuilder(printArray,false));
 
         }
     }
@@ -246,7 +248,7 @@ public class MenuService {
      */
 
 
-    public void createAnimal(ArrayList<Animal> animalArrayList) {
+    public Animal createAnimal(ArrayList<Animal> animalArrayList) {
         System.out.println("-- Create Animal --");
 
         String name = promptToString("Animal Name [Required]: ", null, true);
@@ -256,14 +258,16 @@ public class MenuService {
         String breed = promptToString("Animal Breed [Optional]: ", null, false);
 
         String description = promptToString("Animal Description [Optional]: ", null, false);
+
         System.out.println("You Created the following animal!");
-        Animal animal = new Animal(name,species,breed,description, animalArrayList.size()+1);
+
+        Animal animal = new Animal(animalArrayList.size()+1,name,species,breed,description);
 
         ArrayList<Animal> animalPrintArray = new ArrayList<>();
         animalPrintArray.add(animal);
         System.out.println(tableBuilder(animalPrintArray,false));
 
-        animalArrayList.add(animal);
+        return animal;
     }
 
     /**
@@ -272,34 +276,39 @@ public class MenuService {
      */
     //Allows user to edit Animal
 
-    public void editAnimal(ArrayList<Animal> animalArrayList) {
+    public Animal editAnimal(ArrayList<Animal> animalArrayList) {
+        ArrayList<Animal> animalPrintArray = new ArrayList<>();
+        Animal editAnimal = null;
 
         System.out.println("-- Edit Animal -- ");
 
-        int index = animalSearch(animalArrayList);
+        int uniqueId = animalSearch(animalArrayList);
 
-        if (index != -1) {
-            Animal animal = animalArrayList.get(index);
+        if (uniqueId != -1) {
 
-            ArrayList<Animal> animalPrintArray = new ArrayList<>();
-            animalPrintArray.add(animalArrayList.get(index));
+            for(Animal animal : animalArrayList) {
+                if (animal.getUniqueId() == uniqueId) {
+                    animalPrintArray.add(animal);
+                    editAnimal = animal;
+                }
+            }
+
             System.out.println(tableBuilder(animalPrintArray,false));
 
 
             System.out.println("Change information or hit return to keep information");
 
-            animal.setName(promptToString("Name [" + animal.getName() + "] : ", animal.getName(), true));
-
-            animal.setSpecies(promptToString("Species [" + animal.getSpecies() + "] : ", animal.getSpecies(), true));
-
-            animal.setBreed(promptToString("Breed [" + animal.getBreed() + "] : ", animal.getBreed(), false));
-
-            animal.setDescription(promptToString("Description [" + animal.getDescription() + "] : ", animal.getDescription(), false));
+            editAnimal.setName(promptToString("Name [" +  editAnimal.getName() + "] : ",  editAnimal.getName(), true));
+            editAnimal.setSpecies(promptToString("Species [" +  editAnimal.getSpecies() + "] : ",  editAnimal.getSpecies(), true));
+            editAnimal.setBreed(promptToString("Breed [" +  editAnimal.getBreed() + "] : ",  editAnimal.getBreed(), false));
+            editAnimal.setDescription(promptToString("Description [" +  editAnimal.getDescription() + "] : ",  editAnimal.getDescription(), false));
 
             System.out.println(tableBuilder(animalPrintArray,false));
 
-        }
+            return editAnimal;
 
+        }
+        return null;
     }
 
     /**
@@ -340,20 +349,25 @@ public class MenuService {
      * @param animalArrayList
      */
 
-    public void deleteAnimal(ArrayList<Animal> animalArrayList) {
+    public Animal deleteAnimal(ArrayList<Animal> animalArrayList) {
+        ArrayList<Animal> animalPrintArray = new ArrayList<>();
+        Animal deleteAnimal = null;
+
         System.out.println("-- Delete Animal --");
-        int index = animalSearch(animalArrayList);
+        int uniqueId = animalSearch(animalArrayList);
 
-        if (index != -1) {
-            Animal animal = animalArrayList.get(index);
+        if (uniqueId != -1) {
 
-            ArrayList<Animal> animalPrintArray = new ArrayList<>();
-
-            animalPrintArray.add(animalArrayList.get(index));
+            for(Animal animal : animalArrayList) {
+                if (animal.getUniqueId() == uniqueId) {
+                    animalPrintArray.add(animal);
+                    deleteAnimal = animal;
+                }
+            }
 
             System.out.println(tableBuilder(animalPrintArray,false));
 
-            System.out.printf("Are you sure you want to delete %s? (Y/N)",animal.getName());
+            System.out.printf("Are you sure you want to delete %s? (Y/N)",deleteAnimal.getName());
 
             String response = scanner.next();
             try {
@@ -366,9 +380,9 @@ public class MenuService {
             }catch (Exception e) {
                 if(response.toLowerCase().equals("y")){
 
-                    System.out.printf("'%s' was deleted!\n",animal.getName());
+                    System.out.printf("'%s' was deleted!\n",deleteAnimal.getName());
 
-                    animalArrayList.remove(index);
+                    return deleteAnimal;
                 }else if (response.toLowerCase().equals("n")) {
 
                     System.out.println("Returning to Main Menu ");
@@ -382,6 +396,7 @@ public class MenuService {
 
         }
 
+        return null;
     }
 
     /**
@@ -404,7 +419,7 @@ public class MenuService {
     /**
      * search method which returns the int of search for animals
      * @param animalArrayList to be searched
-     * @return the index of the animal. Returns -1 if no animal is found that matches search
+     * @return the uniqueID of the animal. Returns -1 if no animal is found that matches search
      */
 
     public int animalSearch(ArrayList<Animal> animalArrayList) {
@@ -425,21 +440,14 @@ public class MenuService {
             try {
                 int uniqueIndexSearch = Integer.parseInt(search);
 
-                if (uniqueIndexSearch < 1 || uniqueIndexSearch > animalArrayList.size()) {
-
-                    System.out.println("This is not a valid index");
-
-                    return animalSearch(animalArrayList);
-                } else {
-
-                    for(Animal animal : animalArrayList) {
-
-                        if (animal.getUniqueId() == uniqueIndexSearch) {
-
-                            return animalArrayList.indexOf(animal);
-                        }
+                for(Animal animal : animalArrayList) {
+                    if (animal.getUniqueId() == uniqueIndexSearch) {
+                        return animal.getUniqueId();
                     }
                 }
+
+                System.out.println("This is not a valid id");
+                animalSearch(animalArrayList);
             }
 
             catch (Exception e) {
@@ -470,7 +478,7 @@ public class MenuService {
                     return animalSearch(animalArrayList);
                 } else if (animalPrintArray.size() == 1) {
 
-                    return animalArrayList.indexOf(animalPrintArray.get(0));
+                    return animalPrintArray.get(0).getUniqueId();
                 } else {
 
                     System.out.println("The following animals matched your search:");
@@ -486,6 +494,7 @@ public class MenuService {
 
         return -1;
     }
+
 
 }
 

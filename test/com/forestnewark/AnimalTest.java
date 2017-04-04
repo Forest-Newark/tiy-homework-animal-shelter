@@ -77,7 +77,7 @@ public class AnimalTest {
      * animal constructor sets correct name value
      */
     public void animalConstructorSetsCorrectName() {
-        Animal animal = new Animal("Melody","Dog","Border Collie","Jumps a lot", 1);
+        Animal animal = new Animal(1,"Melody","Dog","Border Collie","Jumps a lot");
         assertThat(animal.getName(),equalTo("Melody"));
     }
 
@@ -86,7 +86,7 @@ public class AnimalTest {
      * animal constructor sets correct species value
      */
     public void animalConstructorSetsCorrectSpecies(){
-        Animal animal = new Animal("Melody","Dog","Border Collie","Jumps a lot", 1);
+        Animal animal = new Animal(1,"Melody","Dog","Border Collie","Jumps a lot");
         assertThat(animal.getSpecies(),equalTo("Dog"));
     }
 
@@ -95,7 +95,7 @@ public class AnimalTest {
      * animal constructor sets correct breed value
      */
     public void animalConstructorSetsCorrectBreed() {
-        Animal animal = new Animal("Melody","Dog","Border Collie","Jumps a lot", 1);
+        Animal animal = new Animal(1,"Melody","Dog","Border Collie","Jumps a lot");
         assertThat(animal.getBreed(),equalTo("Border Collie"));
     }
 
@@ -104,7 +104,7 @@ public class AnimalTest {
      * animal constructor sets correct description value
      */
     public void animalConstructorSetsCorrectDescription() {
-        Animal animal = new Animal("Melody","Dog","Border Collie","Jumps a lot", 1);
+        Animal animal = new Animal(1,"Melody","Dog","Border Collie","Jumps a lot");
         assertThat(animal.getDescription(),equalTo("Jumps a lot"));
     }
 
@@ -113,7 +113,7 @@ public class AnimalTest {
      * animal constructor sets correct dateAdded value
      */
     public void animalConstructorSetsCorrectDateAdded() {
-        Animal animal = new Animal("Melody","Dog","Border Collie","Jumps a lot", 1);
+        Animal animal = new Animal(1,"Melody","Dog","Border Collie","Jumps a lot");
         assertThat(animal.getDateAdded(),equalTo(LocalDate.now()));
     }
 
