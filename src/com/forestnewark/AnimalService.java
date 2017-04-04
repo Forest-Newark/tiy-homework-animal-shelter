@@ -31,8 +31,6 @@ public class AnimalService {
 
     }
 
-
-
     //Edit Animal
     public void editAnimal(Animal animal) throws SQLException{
         if (animal != null) {
@@ -40,7 +38,6 @@ public class AnimalService {
         }
 
     }
-
 
     //Delete Animal
     public void deleteAnimal(Animal animal) throws SQLException{
