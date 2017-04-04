@@ -2,6 +2,7 @@ package com.forestnewark;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Created by forestnewark on 4/3/17.
@@ -101,5 +102,16 @@ public class AnimalRepository {
     }
 
 
+    public int getAnimalCount() throws SQLException {
+        Statement stmt = conn.createStatement();
 
+        ResultSet result =  stmt.executeQuery("SELECT COUNT(*) AS total FROM ANIMAL ");
+        int total = 0;
+        while(result.next()) {
+            total = result.getInt("total");
+
+        }
+
+        return total;
+    }
 }

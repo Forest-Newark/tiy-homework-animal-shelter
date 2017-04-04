@@ -348,7 +348,7 @@ public class MenuServiceTest {
     public void animalSearchValidatesInputLessThen1() {
         systemInMock.provideLines("0", "1");
         menuService.animalSearch(animalTestArray);
-        assertThat(systemOutRule.getLog(), containsString("This is not a valid index"));
+        assertThat(systemOutRule.getLog(), containsString("This is not a valid id"));
     }
 
     @Test
@@ -373,11 +373,11 @@ public class MenuServiceTest {
 
     @Test
     /*
-    animalSearch returns correct index for a unique animal
+    animalSearch returns correct unqiue id for an animal
      */
     public void animalSearchReturnsIndexForUniqueMatch() {
         systemInMock.provideLines("Lily");
-        assertThat(menuService.animalSearch(animalTestArray), equalTo(5));
+        assertThat(menuService.animalSearch(animalTestArray), equalTo(6));
     }
 
     @Test

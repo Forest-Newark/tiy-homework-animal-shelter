@@ -12,8 +12,8 @@ public class AnimalService {
     private AnimalRepository animalRepository;
 
 
-    public AnimalService(AnimalRepository peopleRepository){
-        this.animalRepository = peopleRepository;
+    public AnimalService(AnimalRepository animalRepositoryRepository){
+        this.animalRepository = animalRepositoryRepository;
     }
 
     //Animal List
