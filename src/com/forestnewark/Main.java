@@ -14,6 +14,8 @@ public class Main {
 
        //Setup JBDC with PostgreSQL
         String jdbcUrl = "jdbc:postgresql://localhost/animal_shelter";
+
+
         AnimalRepository repository = new AnimalRepository(jdbcUrl);
         AnimalService service = new AnimalService(repository);
 

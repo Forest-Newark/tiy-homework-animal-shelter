@@ -77,6 +77,7 @@ public class AnimalRepository {
         PreparedStatement preparedStatement = conn.prepareStatement("INSERT INTO animal(name, species, breed, description) " +
                 "VALUES(?, ?, ? ,?) ");
 
+
         // set parameter values
         preparedStatement.setString(1, animal.getName());
         preparedStatement.setString(2, animal.getSpecies());
@@ -146,7 +147,6 @@ public class AnimalRepository {
             total = result.getInt("total");
 
         }
-
         return total;
     }
 }
