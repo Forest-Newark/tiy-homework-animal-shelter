@@ -11,7 +11,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import static org.apache.poi.util.StringUtil.UTF8;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -69,6 +71,64 @@ public class AnimalRepositoryTest {
         repository = new AnimalRepository(JDBC_URL);
     }
 
+    @Test
+    /*
+    list animal returns arraylist of all animals in database
+     */
+    public void listAnimalReturnsArrayListWithAllAnimals() throws SQLException {
+        ArrayList<Animal> resultArray = new ArrayList<>();
+        resultArray = repository.listAnimal();
+        assertThat(resultArray.get(0).getName(),equalTo("Melody"));
+        assertThat(resultArray.get(1).getName(),equalTo("Johnny"));
+    }
+
+    @Test
+    /*
+    animalDetails returns a result set with only the specified animal in it
+     */
+    public void animalDetailReturnsOnlyCorrectAnimal() throws SQLException{
+        ArrayList<Animal> resultArray = new ArrayList<>();
+
+        ResultSet result = repository.animalDetail("4");
+        while(result.next()){
+            Animal animal = new Animal(
+                    result.getInt("animalid"),
+                    result.getString("name"),
+                    result.getString("species"),
+                    result.getString("breed"),
+                    result.getString("description")
+            );
+            resultArray.add(animal);
+        }
+
+        assertThat(resultArray.size(),equalTo(1));
+        assertThat(resultArray.get(0).getName(),equalTo("Sasha"));
+    }
+
+    @Test
+    /*
+    editAnimal changes the appropriate information on a specific animal
+     */
+    public void editAnimalChangesCorrectInformation() throws SQLException {
+        Animal animal = new Animal(1,"Change","Change","Change","Change");
+        repository.editAnimal(animal);
+
+        ArrayList<Animal> resultArray = new ArrayList<>();
+
+        ResultSet result = repository.animalDetail("1");
+        while(result.next()){
+            Animal animalChange = new Animal(
+                    result.getInt("animalid"),
+                    result.getString("name"),
+                    result.getString("species"),
+                    result.getString("breed"),
+                    result.getString("description")
+            );
+            resultArray.add(animalChange);
+        }
+
+        assertThat(resultArray.get(0).getName(),equalTo("Change"));
+    }
 
 
 
